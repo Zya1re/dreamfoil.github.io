@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/df32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/df16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"dreamfo1l.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="pwn college 第一个模块">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Program Interaction">
+<meta property="og:url" content="https://dreamfo1l.github.io/2022/10/13/Program%20Interaction/index.html">
+<meta property="og:site_name" content="dreamfoil">
+<meta property="og:description" content="pwn college 第一个模块">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-12T19:00:10.000Z">
+<meta property="article:modified_time" content="2022-10-12T19:33:06.698Z">
+<meta property="article:author" content="dreamfoil">
+<meta property="article:tag" content="pwn">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://dreamfo1l.github.io/2022/10/13/Program%20Interaction/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Program Interaction | dreamfoil</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">dreamfoil</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://dreamfo1l.github.io/2022/10/13/Program%20Interaction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="dreamfoil">
+      <meta itemprop="description" content="独立之精神，自由之思想。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dreamfoil">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Program Interaction
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-13 03:00:10 / 修改时间：03:33:06" itemprop="dateCreated datePublished" datetime="2022-10-13T03:00:10+08:00">2022-10-13</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>pwn college 第一个模块</p>
+<span id="more"></span>
+
+<h4 id="level-1-7"><a href="#level-1-7" class="headerlink" title="level 1-7"></a>level 1-7</h4><ol>
+<li><p>限制在bash下执行</p>
+</li>
+<li><p>输入指定字符</p>
+</li>
+<li><p>输入指定参数</p>
+</li>
+<li><p>添加指定环境变量</p>
+</li>
+<li><p>重定向输入</p>
+</li>
+<li><h2 id="重定向输出"><a href="#重定向输出" class="headerlink" title="重定向输出"></a>重定向输出</h2></li>
+<li><p>在空环境变量下运行   <code>env -i embryio_level7</code></p>
+</li>
+</ol>
+<h4 id="level-8-14-shell脚本"><a href="#level-8-14-shell脚本" class="headerlink" title="level 8-14 shell脚本"></a>level 8-14 shell脚本</h4><p>把前7个题在shell脚本中运行</p>
+<h4 id="level-15-21-ipython"><a href="#level-15-21-ipython" class="headerlink" title="level 15-21 ipython"></a>level 15-21 ipython</h4><p>用ipython运行，subprocess或pwntools来运行，重复上面一轮</p>
+<h4 id="level-22-28-python脚本入门"><a href="#level-22-28-python脚本入门" class="headerlink" title="level 22-28 python脚本入门"></a>level 22-28 python脚本入门</h4><p>python脚本重复一轮</p>
+<h4 id="level-29-32-C语言生成子进程"><a href="#level-29-32-C语言生成子进程" class="headerlink" title="level 29-32 C语言生成子进程"></a>level 29-32 C语言生成子进程</h4><p>父进程为二进制文件</p>
+<p>system和popen运行程序都会调用shell来执行，那么程序的父进程就是shell进程比如bash。</p>
+<p>exec系列函数是替换当前进程，不会生成子进程。</p>
+<p>得知若想得到父子进程关系，这里使用fork进程，生成子进程，然后在子进程中执行exec，替换为目标进程，父子关系保留。</p>
+<p>29题writeup，30-32 差不多。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">pwncollege</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span>* argv[],<span class="type">char</span>* env[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="type">int</span> pid;</span><br><span class="line">        pid = fork();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(pid==<span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">                <span class="built_in">execve</span>(<span class="string">&quot;/challenge/embryoio_level29&quot;</span>,argv,<span class="literal">NULL</span>); <span class="comment">//测试第二个参数不能为空，猜测必须保留argv的第一个参数，即程序名。</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">                <span class="built_in">wait</span>(<span class="literal">NULL</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="level-33-35-C语言重定向"><a href="#level-33-35-C语言重定向" class="headerlink" title="level 33-35  C语言重定向"></a>level 33-35  C语言重定向</h4><p>​	重定向，这里使用的<strong>dup2</strong>函数，该函数创建一个文件描述符的副本。相比于<strong>dup</strong>函数，<strong>dup2</strong>可以指定新的文件描述符。如果指定的文件描述符之前已经被使用了，那么就会先关闭它再重新使用。</p>
+<p><code>dup2(fd, STDOUT_FILENO);</code> </p>
+<p>​	对该函数实现重定向输入输出，<strong>我的理解是</strong>，STDOUT_FILENO这个文件描述符，本来是stdout的描述符，然后dup2将fd描述符做复制，复制的结果描述符指定为STDOUT_FILENO，该描述符被使用，就先关闭了原来指向stdout的，然后重新使用该描述符，和fd相同。程序的输出仍会找到STDOUT_FILENO描述符，但是该描述符已经被更改为fd所指向的文件。<strong>程序执行exec系列函数仍会继承替换后的STDOUT_FILENO描述符。</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">pwncollege</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span>* argv[],<span class="type">char</span>* env[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> pid;</span><br><span class="line">	<span class="type">int</span> fd;</span><br><span class="line">	pid = fork();</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span>(pid==<span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		</span><br><span class="line">		fd = <span class="built_in">open</span>(<span class="string">&quot;/tmp/dkakhd&quot;</span>,O_RDWR);</span><br><span class="line">		<span class="built_in">dup2</span>(fd,STDOUT_FILENO); <span class="comment">//在子程序中重定向，execve后的替换程序仍会继承。</span></span><br><span class="line">		<span class="type">char</span> fname[] = <span class="string">&quot;/challenge/embryoio_level34&quot;</span>;</span><br><span class="line">		<span class="type">char</span>* fenv[] = &#123;<span class="string">&quot;ttqviq=yihnwebesd&quot;</span>,<span class="literal">NULL</span>&#125;;</span><br><span class="line">		<span class="type">char</span>* fargv[] = &#123;fname,<span class="literal">NULL</span>&#125;;	</span><br><span class="line">		<span class="built_in">execve</span>(<span class="string">&quot;/challenge/embryoio_level34&quot;</span>,fargv,<span class="literal">NULL</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">wait</span>(<span class="literal">NULL</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="level-36-41-管道"><a href="#level-36-41-管道" class="headerlink" title="level 36-41 管道"></a>level 36-41 管道</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> /challenge/embryoio_level36  | <span class="built_in">cat</span></span><br><span class="line"> </span><br><span class="line"> /challenge/embryoio_level37 | grep <span class="string">&quot;pwn&quot;</span></span><br><span class="line">pwn.college&#123;w_wDMMRAg-MewaaBNNpty3rZAcB.ddzMsQjMxUzW&#125;</span><br><span class="line"></span><br><span class="line">/challenge/embryoio_level38 | sed -n <span class="string">&quot;/pwn/p&quot;</span></span><br><span class="line">pwn.college&#123;g2RAygBCL3qJSXlgcDh03tvbgKG.dhzMsQjMxUzW&#125;</span><br><span class="line"></span><br><span class="line">/challenge/embryoio_level39 | rev | rev   注： rev命令可以将字符串倒序输出，两个rev就正回来了</span><br><span class="line"></span><br><span class="line"><span class="built_in">cat</span> | /challenge/embryoio_level40   </span><br><span class="line"></span><br><span class="line">rev | /challenge/embryoio_level41   </span><br><span class="line">不太清楚为什么40 41是这样的，事实上 41 题是把程序的stdin替换为了rev，需要在输入点输入点倒序输入题目要求的字符串，相当于程序的stdin先是经过了rev，然后rev的输出才传给程序。</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<h4 id="level-42-47-shell脚本管道"><a href="#level-42-47-shell脚本管道" class="headerlink" title="level 42-47 shell脚本管道"></a>level 42-47 shell脚本管道</h4><h4 id="level-48-59-python管道输出"><a href="#level-48-59-python管道输出" class="headerlink" title="level 48-59 python管道输出"></a>level 48-59 python管道输出</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line">  </span><br><span class="line">p1 = subprocess.Popen([<span class="string">&quot;/challenge/embryoio_level49&quot;</span>], stdout=subprocess.PIPE)</span><br><span class="line">p2 = subprocess.Popen([<span class="string">&quot;grep&quot;</span>,<span class="string">&quot;pwn&quot;</span>], stdin=p1.stdout)</span><br></pre></td></tr></table></figure>
+
+<h4 id="level-60-65-c语言pipe函数创建管道"><a href="#level-60-65-c语言pipe函数创建管道" class="headerlink" title="level 60-65  c语言pipe函数创建管道"></a>level 60-65  c语言pipe函数创建管道</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">pwncollege</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span>* argv[],<span class="type">char</span>* env[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> pid,p1;</span><br><span class="line">	<span class="type">int</span> fd[<span class="number">2</span>];</span><br><span class="line">	pid = fork();</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span>(pid==<span class="number">0</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">pipe</span>(fd);  <span class="comment">//创建管道</span></span><br><span class="line">        p1 = fork();</span><br><span class="line">        <span class="keyword">if</span>(p1==<span class="number">0</span>)</span><br><span class="line">		&#123;   </span><br><span class="line">            </span><br><span class="line">            <span class="built_in">close</span>(fd[<span class="number">1</span>]) ;  <span class="comment">//关闭写端</span></span><br><span class="line">            <span class="built_in">dup2</span>(fd[<span class="number">0</span>],STDIN_FILENO);</span><br><span class="line">            <span class="type">char</span>* fargv[] = &#123;<span class="string">&quot;cat&quot;</span>,<span class="literal">NULL</span>&#125;;</span><br><span class="line">            <span class="built_in">execve</span>(<span class="string">&quot;/bin/cat&quot;</span>,fargv,<span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">		&#125;<span class="comment">//char* fenv[] = &#123;&quot;ttqviq=yihnwebesd&quot;,NULL&#125;;</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">close</span>(fd[<span class="number">0</span>]); <span class="comment">//关闭读端</span></span><br><span class="line">            <span class="built_in">dup2</span>(fd[<span class="number">1</span>],STDOUT_FILENO);</span><br><span class="line">            <span class="type">char</span>* fargv[] = &#123;<span class="string">&quot;embryoio_level60&quot;</span>,<span class="literal">NULL</span>&#125;;	</span><br><span class="line">            <span class="built_in">execve</span>(<span class="string">&quot;/challenge/embryoio_level60&quot;</span>,fargv,<span class="literal">NULL</span>);</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">wait</span>(<span class="literal">NULL</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="level-66-67-find命令"><a href="#level-66-67-find命令" class="headerlink" title="level 66 67 find命令"></a>level 66 67 find命令</h4><p><code> find /challenge/ -name &quot;em*&quot; -exec /challenge/embryoio_level66 \;</code>	</p>
+<h4 id="level-68-79-各种shell脚本-python脚本"><a href="#level-68-79-各种shell脚本-python脚本" class="headerlink" title="level 68 - 79 各种shell脚本 python脚本"></a>level 68 - 79 各种shell脚本 python脚本</h4><p>68题，将第79个参数设置为<code> tiukttnsdo</code></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/challenge/</span>embryoio_level* `printf <span class="string">&#x27; tiukttnsdo%0.s&#x27;</span> &#123;<span class="number">1</span>..<span class="number">100</span>&#125;`  </span><br></pre></td></tr></table></figure>
+
+<p>剩下的题全部通过c编译的程序实现，然后把程序名改为bash ， python3.8 来绕过验证。</p>
+<p>都是比较重复的技巧。</p>
+<h4 id="level-97-向指定进程发送信号"><a href="#level-97-向指定进程发送信号" class="headerlink" title="level 97 向指定进程发送信号"></a>level 97 向指定进程发送信号</h4><p><code>kill -s SIGINT 3729</code></p>
+<h4 id="level-103-fifo，命名管道"><a href="#level-103-fifo，命名管道" class="headerlink" title="level 103 fifo，命名管道"></a>level 103 fifo，命名管道</h4><p>无名管道应用的一个重大限制是它没有名字，因此，只能用于具有亲缘关系的进程间通信，在<strong>有名管道</strong>（named pipe或FIFO）提出后，该限制得到了克服。FIFO不同于管道之处在于它提供一个路径名与之关联，以FIFO的文件形式存在于文件系统中。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">fifo_in = <span class="string">&quot;/tmp/fifo_in&quot;</span></span><br><span class="line"></span><br><span class="line">os<span class="selector-class">.mkfifo</span>(fifo_in,<span class="number">0</span>o777)</span><br><span class="line">fifo_in_r = os<span class="selector-class">.open</span>(fifo_in,os.O_RDWR)</span><br><span class="line">fifo_in_w = os<span class="selector-class">.open</span>(fifo_in,os.O_WRONLY)</span><br><span class="line"></span><br><span class="line">p0 = <span class="built_in">process</span>(<span class="selector-attr">[<span class="string">&#x27;cat&#x27;</span>]</span>,stdout = fifo_in_w)</span><br><span class="line">p0<span class="selector-class">.sendline</span>(b<span class="string">&#x27;esfnujps&#x27;</span>)</span><br><span class="line"><span class="selector-tag">p</span> = <span class="built_in">process</span>(<span class="selector-attr">[<span class="string">&#x27;/challenge/embryoio_level103&#x27;</span>]</span>,stdin = fifo_in_r)</span><br><span class="line"><span class="selector-tag">p</span><span class="selector-class">.interactive</span>()</span><br></pre></td></tr></table></figure>
+
+<h4 id="level-118-命令管道重定位输入输出"><a href="#level-118-命令管道重定位输入输出" class="headerlink" title="level 118 命令管道重定位输入输出"></a>level 118 命令管道重定位输入输出</h4><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="type">void</span> pwncollege()&#123;</span><br><span class="line">    mkfifo(&quot;/tmp/f1&quot;,<span class="number">0666</span>);</span><br><span class="line">    mkfifo(&quot;/tmp/f2&quot;,<span class="number">0666</span>);</span><br><span class="line">    <span class="keyword">if</span>(fork())&#123;</span><br><span class="line">        <span class="type">int</span> fd1_w = <span class="keyword">open</span>(&quot;/tmp/f1&quot;,O_WRONLY);</span><br><span class="line">        <span class="type">int</span> fd2_r = <span class="keyword">open</span>(&quot;/tmp/f2&quot;,O_RDONLY);</span><br><span class="line">        <span class="type">char</span>* answer = &quot;mfyjtltm&quot;;</span><br><span class="line">        <span class="keyword">write</span>(fd1_w, answer,<span class="number">8</span>);</span><br><span class="line">        <span class="keyword">close</span>(fd1_w);</span><br><span class="line">        wait(<span class="keyword">NULL</span>);</span><br><span class="line">        <span class="type">char</span> result[<span class="number">4096</span>] = &#123;&#125;;</span><br><span class="line">        <span class="keyword">read</span>(fd2_r,result,<span class="number">4096</span>);</span><br><span class="line">        <span class="keyword">write</span>(<span class="number">1</span>,result,<span class="number">4096</span>);   </span><br><span class="line">        </span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="type">int</span> fd1_r = <span class="keyword">open</span>(&quot;/tmp/f1&quot;,O_RDONLY);</span><br><span class="line">        <span class="type">int</span> fd2_w = <span class="keyword">open</span>(&quot;/tmp/f2&quot;,O_WRONLY);</span><br><span class="line">        dup2(fd1_r,<span class="number">0</span>);</span><br><span class="line">        dup2(fd2_w,<span class="number">1</span>);</span><br><span class="line">        execve(&quot;/challenge/embryoio_level118&quot;,<span class="keyword">NULL</span>,<span class="keyword">NULL</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> main() &#123;</span><br><span class="line">    pwncollege();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="level126-131-136-脚本计算"><a href="#level126-131-136-脚本计算" class="headerlink" title="level126 131 136 脚本计算"></a>level126 131 136 脚本计算</h4><p>写脚本做500次数学计算</p>
+<p>写完发现可以直接用pwntools交互，不用管道。。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">import glob </span><br><span class="line">from pwn import process </span><br><span class="line">import <span class="selector-tag">time</span></span><br><span class="line">import json</span><br><span class="line">import os</span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line">path = glob<span class="selector-class">.glob</span>(<span class="string">&quot;/challenge/embr*&quot;</span>)<span class="selector-attr">[0]</span></span><br><span class="line"></span><br><span class="line">f1 = <span class="string">&quot;/tmp/f1&quot;</span></span><br><span class="line"><span class="keyword">if</span> os<span class="selector-class">.path</span><span class="selector-class">.exists</span>(f1):</span><br><span class="line">    os<span class="selector-class">.remove</span>(f1)</span><br><span class="line">os<span class="selector-class">.mkfifo</span>(f1,<span class="number">0</span>o666)</span><br><span class="line">f1_in = os<span class="selector-class">.open</span>(f1,os.O_RDWR)</span><br><span class="line"><span class="selector-tag">p</span> = <span class="built_in">process</span>(f<span class="string">&quot;echo &#123;path&#125; &gt; /tmp/script.sh;bash /tmp/script.sh&quot;</span>,shell = True,stdout=f1_in)</span><br><span class="line"><span class="selector-tag">time</span><span class="selector-class">.sleep</span>(<span class="number">1</span>)</span><br><span class="line">f1_out = os<span class="selector-class">.open</span>(f1,os.O_RDWR)</span><br><span class="line"><span class="keyword">for</span> <span class="selector-tag">i</span> <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">500</span>):</span><br><span class="line">    recv = os<span class="selector-class">.read</span>(f1_out,<span class="number">10000</span>)<span class="selector-class">.decode</span>()</span><br><span class="line">    math_calc = re<span class="selector-class">.findall</span>(r<span class="string">&quot;solution for: (.*)&quot;</span>,recv)<span class="selector-attr">[0]</span></span><br><span class="line">    <span class="selector-tag">p</span><span class="selector-class">.sendline</span>(<span class="built_in">str</span>(<span class="built_in">eval</span>(math_calc))<span class="selector-class">.encode</span>())</span><br><span class="line">    recv2 = os<span class="selector-class">.read</span>(f1_out,<span class="number">10</span>)<span class="selector-class">.decode</span>()</span><br><span class="line">    <span class="selector-id">#print</span>(recv2)</span><br><span class="line"><span class="selector-tag">p</span><span class="selector-class">.wait</span>()</span><br><span class="line">recv2 = os<span class="selector-class">.read</span>(f1_out,<span class="number">1000</span>)<span class="selector-class">.decode</span>()</span><br><span class="line"><span class="function"><span class="title">print</span><span class="params">(recv2)</span></span>   </span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="level128-133-138-脚本发送信号"><a href="#level128-133-138-脚本发送信号" class="headerlink" title="level128 133 138  脚本发送信号"></a>level128 133 138  脚本发送信号</h4><p>脚本发送50个要求的信号给程序。</p>
+<p>python  list样式的 str转list 用eval函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">str_list = <span class="string">&quot;[&#x27;1&#x27;,&#x27;2&#x27;,&#x27;3&#x27;]&quot;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(str_list)) <span class="comment">#类型为str</span></span><br><span class="line">after_convert = <span class="built_in">eval</span>(str_list)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(apter_convert)) <span class="comment">#类型为list</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> glob </span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> process </span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">path = glob.glob(<span class="string">&quot;/challenge/embr*&quot;</span>)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">p = process(<span class="string">f&quot;echo <span class="subst">&#123;path&#125;</span> &gt; /tmp/script.sh;bash /tmp/script.sh&quot;</span>,shell = <span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line">pp = p.recvuntil(<span class="string">b&quot;in exactly this order:&quot;</span>)</span><br><span class="line">sig_list_str = p.recvline().decode().strip()</span><br><span class="line"><span class="comment">#print(sig_list_str)</span></span><br><span class="line">all_signal = <span class="built_in">eval</span>(sig_list_str) </span><br><span class="line"></span><br><span class="line">p2 = process(<span class="string">&quot;kill -l&quot;</span>,shell=<span class="literal">True</span>)</span><br><span class="line">signal_sequence  = p2.recv(<span class="number">1000</span>).decode().strip().split(<span class="string">&quot;\n&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(signal_sequence)):</span><br><span class="line">    signal_sequence[i] = <span class="string">&quot;SIG&quot;</span>+ signal_sequence[i]</span><br><span class="line"></span><br><span class="line">ppid = re.findall(<span class="string">r&quot;\(PID (.*)\)&quot;</span>, pp.decode())[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> sig <span class="keyword">in</span> all_signal:</span><br><span class="line">   sig_num = signal_sequence.index(sig)</span><br><span class="line">   <span class="comment">#os.system(f&quot;kill -&#123;sig_num&#125; &#123;ppid&#125;&quot;)</span></span><br><span class="line">   os.kill(<span class="built_in">int</span>(ppid),sig_num)</span><br><span class="line">   <span class="built_in">print</span>(p.read().decode()) </span><br><span class="line"></span><br><span class="line"><span class="comment">#print(p.recv(30000))     //缓冲区会满 ,分开读出来</span></span><br><span class="line"></span><br><span class="line">p.wait()</span><br><span class="line"><span class="built_in">print</span>(p.read().decode())</span><br></pre></td></tr></table></figure>
+
+<h4 id="level-140"><a href="#level-140" class="headerlink" title="level 140"></a>level 140</h4><p>tcp连接后计算</p>
+<p>linux shell 可以直接建立tcp和udp连接。 通过&#x2F;dev&#x2F;tcp &#x2F;dev&#x2F;udp。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">exec <span class="number">33</span>&lt;&gt;<span class="regexp">/dev/</span>tcp<span class="regexp">/127.0.0.1/</span><span class="number">1284</span></span><br><span class="line"></span><br><span class="line"><span class="number">33</span> 是文件描述符 &gt; 写入 &lt; 读取 &lt;&gt; 表示可读写 </span><br></pre></td></tr></table></figure>
+
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/06/Mimikatz/" rel="prev" title="Mimikatz在Windows 11上运行的问题">
+      <i class="fa fa-chevron-left"></i> Mimikatz在Windows 11上运行的问题
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#level-1-7"><span class="nav-text">level 1-7</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E5%AE%9A%E5%90%91%E8%BE%93%E5%87%BA"><span class="nav-text">重定向输出</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#level-8-14-shell%E8%84%9A%E6%9C%AC"><span class="nav-text">level 8-14 shell脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-15-21-ipython"><span class="nav-text">level 15-21 ipython</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-22-28-python%E8%84%9A%E6%9C%AC%E5%85%A5%E9%97%A8"><span class="nav-text">level 22-28 python脚本入门</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-29-32-C%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90%E5%AD%90%E8%BF%9B%E7%A8%8B"><span class="nav-text">level 29-32 C语言生成子进程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-33-35-C%E8%AF%AD%E8%A8%80%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-text">level 33-35  C语言重定向</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-36-41-%E7%AE%A1%E9%81%93"><span class="nav-text">level 36-41 管道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-42-47-shell%E8%84%9A%E6%9C%AC%E7%AE%A1%E9%81%93"><span class="nav-text">level 42-47 shell脚本管道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-48-59-python%E7%AE%A1%E9%81%93%E8%BE%93%E5%87%BA"><span class="nav-text">level 48-59 python管道输出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-60-65-c%E8%AF%AD%E8%A8%80pipe%E5%87%BD%E6%95%B0%E5%88%9B%E5%BB%BA%E7%AE%A1%E9%81%93"><span class="nav-text">level 60-65  c语言pipe函数创建管道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-66-67-find%E5%91%BD%E4%BB%A4"><span class="nav-text">level 66 67 find命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-68-79-%E5%90%84%E7%A7%8Dshell%E8%84%9A%E6%9C%AC-python%E8%84%9A%E6%9C%AC"><span class="nav-text">level 68 - 79 各种shell脚本 python脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-97-%E5%90%91%E6%8C%87%E5%AE%9A%E8%BF%9B%E7%A8%8B%E5%8F%91%E9%80%81%E4%BF%A1%E5%8F%B7"><span class="nav-text">level 97 向指定进程发送信号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-103-fifo%EF%BC%8C%E5%91%BD%E5%90%8D%E7%AE%A1%E9%81%93"><span class="nav-text">level 103 fifo，命名管道</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-118-%E5%91%BD%E4%BB%A4%E7%AE%A1%E9%81%93%E9%87%8D%E5%AE%9A%E4%BD%8D%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA"><span class="nav-text">level 118 命令管道重定位输入输出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level126-131-136-%E8%84%9A%E6%9C%AC%E8%AE%A1%E7%AE%97"><span class="nav-text">level126 131 136 脚本计算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level128-133-138-%E8%84%9A%E6%9C%AC%E5%8F%91%E9%80%81%E4%BF%A1%E5%8F%B7"><span class="nav-text">level128 133 138  脚本发送信号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-140"><span class="nav-text">level 140</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="dreamfoil"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">dreamfoil</p>
+  <div class="site-description" itemprop="description">独立之精神，自由之思想。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:1224825643@qq.com" title="E-Mail → mailto:1224825643@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">dreamfoil</span>
+</div>
+
+ <!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div> -->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
