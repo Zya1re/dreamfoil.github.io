@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/df32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/df16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"dreamfo1l.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Pwn.college Assembly Module">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Assembly">
+<meta property="og:url" content="https://dreamfo1l.github.io/2022/10/13/Assembly/index.html">
+<meta property="og:site_name" content="dreamfoil">
+<meta property="og:description" content="Pwn.college Assembly Module">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-12T19:36:13.000Z">
+<meta property="article:modified_time" content="2022-11-01T07:01:30.373Z">
+<meta property="article:author" content="dreamfoil">
+<meta property="article:tag" content="PwnCollege">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://dreamfo1l.github.io/2022/10/13/Assembly/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Assembly | dreamfoil</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">dreamfoil</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://dreamfo1l.github.io/2022/10/13/Assembly/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="dreamfoil">
+      <meta itemprop="description" content="独立之精神，自由之思想。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dreamfoil">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Assembly
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-13 03:36:13" itemprop="dateCreated datePublished" datetime="2022-10-13T03:36:13+08:00">2022-10-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-11-01 15:01:30" itemprop="dateModified" datetime="2022-11-01T15:01:30+08:00">2022-11-01</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Pwn.college Assembly Module</p>
+<span id="more"></span>
+
+<h4 id="level-1-寄存器赋值"><a href="#level-1-寄存器赋值" class="headerlink" title="level 1  寄存器赋值"></a>level 1  寄存器赋值</h4><p>题目</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">In <span class="keyword">this</span> level you will work <span class="keyword">with</span> registers_use! Please <span class="keyword">set</span> the following:</span><br><span class="line">* rdi = <span class="number">0x1337</span></span><br></pre></td></tr></table></figure>
+
+<p>就是给rdi寄存器赋值</p>
+<p>汇编代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">        mov rdi, 0x1337</span><br></pre></td></tr></table></figure>
+
+<p>编译命令 <code>gcc -nostdlib demo.s -o level_1</code></p>
+<p>将text段的二进制保存 <code>objcopy --dump-section .text=exit.bin level_1</code></p>
+<p>向程序输入text段 <code> cat b.bin | /challenge/embryoasm_level*</code></p>
+<p><strong>python实现</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> * </span><br><span class="line"><span class="keyword">import</span> glob </span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">&quot;amd64&quot;</span></span><br><span class="line">context.log_level = <span class="string">&quot;debug&quot;</span></span><br><span class="line"></span><br><span class="line">chal = glob.glob(<span class="string">&quot;/challenge/embr*&quot;</span>)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">assembly = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">	mov rdi, 0x1337</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">p = process(chal)</span><br><span class="line">p.send(asm(assembly))</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4><h4 id="level-2-add"><a href="#level-2-add" class="headerlink" title="level 2 add"></a>level 2 add</h4><p><strong>题目</strong></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">In this level you will be working <span class="keyword">with</span> registers. You will be asked <span class="built_in">to</span> modify</span><br><span class="line"><span class="keyword">or</span> <span class="built_in">read</span> <span class="built_in">from</span> registers_use.<span class="comment"></span></span><br><span class="line"><span class="comment">//测试对寄存器的读写操作</span><span class="comment"></span></span><br><span class="line"><span class="comment">//下面介绍几条汇编指令</span></span><br><span class="line">Many instructions exist <span class="keyword">in</span> x86 that allow you <span class="built_in">to</span> <span class="built_in">do</span> all <span class="keyword">the</span> <span class="keyword">normal</span></span><br><span class="line">math operations <span class="keyword">on</span> <span class="title">registers_use</span> <span class="title">and</span> <span class="title">memory</span>. <span class="title">For</span> <span class="title">shorthand</span>, <span class="title">when</span> <span class="title">we</span> <span class="title">say</span></span><br><span class="line">A += B, <span class="keyword">it</span> really means, A = A + B. Here are some useful instructions:</span><br><span class="line"><span class="built_in">add</span> reg1, reg2       &lt;=&gt;     reg1 += reg2</span><br><span class="line">sub reg1, reg2       &lt;=&gt;     reg1 -= reg2</span><br><span class="line">imul reg1, reg2      &lt;=&gt;     reg1 *= reg2</span><br><span class="line"><span class="keyword">div</span>  is <span class="keyword">a</span> littler harder, we will discuss <span class="keyword">it</span> later.</span><br><span class="line">Note: all <span class="string">&#x27;regX&#x27;</span> can be replaced <span class="keyword">by</span> <span class="keyword">a</span> <span class="built_in">constant</span> <span class="keyword">or</span> memory location<span class="comment"></span></span><br><span class="line"><span class="comment">//完成对寄存器的add操作</span></span><br><span class="line">Do <span class="keyword">the</span> following:</span><br><span class="line">* <span class="built_in">add</span> <span class="number">0x331337</span> <span class="built_in">to</span> rdi<span class="comment"></span></span><br><span class="line"><span class="comment">//操作之前需要设定寄存器初值，该初值会变，所以后面要交互一下。</span></span><br><span class="line">We will now <span class="built_in">set</span> <span class="keyword">the</span> following <span class="keyword">in</span> preparation <span class="keyword">for</span> your code:</span><br><span class="line">rdi = <span class="number">0x81f</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>解题</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> * </span><br><span class="line"><span class="keyword">import</span> glob </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">context.arch = <span class="string">&quot;amd64&quot;</span></span><br><span class="line">context.log_level = <span class="string">&quot;debug&quot;</span></span><br><span class="line"></span><br><span class="line">chal = glob.glob(<span class="string">&quot;/challenge/embr*&quot;</span>)[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p = process(chal)</span><br><span class="line"><span class="comment">#找到rdi初值</span></span><br><span class="line">recv = p.recvuntil(<span class="string">&quot;Please give&quot;</span>).decode()</span><br><span class="line">rdi = (re.findall(<span class="string">r&quot;rdi = (.*)\n&quot;</span>,recv)[<span class="number">0</span>]) </span><br><span class="line"></span><br><span class="line">assembly = <span class="string">f&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">	mov rdi, <span class="subst">&#123;rdi&#125;</span></span></span><br><span class="line"><span class="string">	add rdi, 0x331337</span></span><br><span class="line"><span class="string">	&quot;&quot;&quot;</span></span><br><span class="line"><span class="comment">#print(assembly)</span></span><br><span class="line">p.send(asm(assembly))</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="level-3-imul"><a href="#level-3-imul" class="headerlink" title="level 3 imul"></a>level 3 imul</h4><p><strong>题目</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Using your new knowledge, please compute the following:</span><br><span class="line">f(x) = mx + b, where:</span><br><span class="line">m = rdi</span><br><span class="line">x = rsi</span><br><span class="line">b = rdx</span><br><span class="line">Place the value into rax given the above.</span><br><span class="line">We will now set the following in preparation for your code:</span><br><span class="line">rdi = 0x7d2</span><br><span class="line">rsi = 0x235f</span><br><span class="line">rdx = 0x21ce</span><br></pre></td></tr></table></figure>
+
+<p><strong>题解</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">from pwn import * </span><br><span class="line">import glob </span><br><span class="line">import re</span><br><span class="line">context.arch = &quot;amd64&quot;</span><br><span class="line">context.log_level = &quot;debug&quot;</span><br><span class="line"></span><br><span class="line">chal = glob.glob(&quot;/challenge/embr*&quot;)[0]</span><br><span class="line"></span><br><span class="line">p = process(chal)</span><br><span class="line">recv = p.recvuntil(&quot;Please give&quot;).decode()</span><br><span class="line">rdi = (re.findall(r&quot;rdi = (.*)\n&quot;,recv)[0])</span><br><span class="line">rsi = (re.findall(r&quot;rsi = (.*)\n&quot;,recv)[0])</span><br><span class="line">rdx = (re.findall(r&quot;rdx = (.*)\n&quot;,recv)[0])</span><br><span class="line"></span><br><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">	mov rdi, &#123;rdi&#125;</span><br><span class="line">	mov rsi, &#123;rsi&#125;</span><br><span class="line">	mov rdx, &#123;rdx&#125;</span><br><span class="line">	imul rdi,rsi</span><br><span class="line">	add rdi,rdx</span><br><span class="line">	mov rax,rdi</span><br><span class="line">	&quot;&quot;&quot;</span><br><span class="line">#print(assembly)</span><br><span class="line">p.send(asm(assembly))</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="level-4-div"><a href="#level-4-div" class="headerlink" title="level 4 div"></a>level 4 div</h4><p><strong>题目</strong></p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Recall division <span class="keyword">in</span> x86 <span class="keyword">is</span> more special than <span class="keyword">in</span> normal math. Math <span class="keyword">in</span> here <span class="keyword">is</span></span><br><span class="line">called <span class="built_in">integer</span> math. This means everything, <span class="keyword">as</span> <span class="keyword">it</span> <span class="keyword">is</span> now, <span class="keyword">is</span> <span class="keyword">in</span> <span class="keyword">the</span> realm</span><br><span class="line"><span class="keyword">of</span> whole looking numbers. As an example:</span><br><span class="line"><span class="number">10</span> / <span class="number">3</span> = <span class="number">3</span> <span class="keyword">in</span> <span class="built_in">integer</span> math. Why? Because <span class="number">3.33</span> gets rounded down <span class="keyword">to</span> an <span class="built_in">integer</span>.</span><br><span class="line">The relevant instructions <span class="keyword">for</span> this level are:</span><br><span class="line">mov rax, reg1; <span class="keyword">div</span> reg2</span><br><span class="line">Notice: <span class="keyword">to</span> use this instruction you need <span class="keyword">to</span> <span class="keyword">first</span> load rax <span class="keyword">with</span> <span class="keyword">the</span> desired register</span><br><span class="line">you intended <span class="keyword">to</span> be <span class="keyword">the</span> divided. Then <span class="built_in">run</span> <span class="keyword">div</span> reg2, <span class="keyword">where</span> reg2 <span class="keyword">is</span> <span class="keyword">the</span> divisor. This</span><br><span class="line">results <span class="keyword">in</span>:</span><br><span class="line">rax = rdi / rsi; rdx = remainder</span><br><span class="line">The quotient <span class="keyword">is</span> placed <span class="keyword">in</span> rax, <span class="keyword">the</span> remainder <span class="keyword">is</span> placed <span class="keyword">in</span> rdx.</span><br><span class="line">Please compute <span class="keyword">the</span> following:</span><br><span class="line">speed = distance / <span class="built_in">time</span>, <span class="keyword">where</span>:</span><br><span class="line">distance = rdi</span><br><span class="line"><span class="built_in">time</span> = rsi</span><br><span class="line">Place <span class="keyword">the</span> value <span class="keyword">of</span> speed <span class="keyword">into</span> rax <span class="keyword">given</span> <span class="keyword">the</span> <span class="keyword">above</span>.</span><br><span class="line">We will now <span class="keyword">set</span> <span class="keyword">the</span> following <span class="keyword">in</span> preparation <span class="keyword">for</span> your code:</span><br><span class="line">rdi = <span class="number">0x981</span></span><br><span class="line">rsi = <span class="number">0x1d</span></span><br></pre></td></tr></table></figure>
+
+<p>简述 ： div reg 指令，reg是除数，被除数是rax， 商保存在rax，余数保存在rdx。</p>
+<p><strong>题解</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">###############</span></span><br><span class="line"><span class="attr">assembly</span> = f<span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">	mov rdi, &#123;rdi&#125;</span></span><br><span class="line"><span class="string">	mov rsi, &#123;rsi&#125;</span></span><br><span class="line"><span class="string">	mov rax, rdi</span></span><br><span class="line"><span class="string">	div rsi</span></span><br><span class="line"><span class="string">	&quot;&quot;&quot;</span></span><br><span class="line"><span class="comment">##############</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="level-5-余数"><a href="#level-5-余数" class="headerlink" title="level 5  余数"></a>level 5  余数</h4><p>和level 4 相同</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">	mov rdi, &#123;rdi&#125;</span><br><span class="line">	mov rsi, &#123;rsi&#125;</span><br><span class="line">	mov rax, rdi</span><br><span class="line">	div rsi</span><br><span class="line">	mov rax,rdx</span><br><span class="line">	&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="level-6-寄存器结构"><a href="#level-6-寄存器结构" class="headerlink" title="level 6  寄存器结构"></a>level 6  寄存器结构</h4><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Another cool concept <span class="keyword">in</span> x86 is <span class="keyword">the</span> independent access <span class="built_in">to</span> <span class="built_in">lower</span> register <span class="keyword">bytes</span>.</span><br><span class="line">Each register <span class="keyword">in</span> x86 is <span class="number">64</span> bits <span class="keyword">in</span> size, <span class="keyword">in</span> <span class="keyword">the</span> previous levels we have accessed</span><br><span class="line"><span class="keyword">the</span> full register <span class="keyword">using</span> rax, rdi <span class="keyword">or</span> rsi. We can also access <span class="keyword">the</span> <span class="built_in">lower</span> <span class="keyword">bytes</span> <span class="keyword">of</span></span><br><span class="line"><span class="keyword">each</span> register <span class="keyword">using</span> different register names. For example <span class="keyword">the</span> <span class="built_in">lower</span></span><br><span class="line"><span class="number">32</span> bits <span class="keyword">of</span> rax can be accessed <span class="keyword">using</span> eax, <span class="built_in">lower</span> <span class="number">16</span> bits <span class="keyword">using</span> ax,</span><br><span class="line"><span class="built_in">lower</span> <span class="number">8</span> bits <span class="keyword">using</span> al, etc.</span><br><span class="line">MSB                                    LSB</span><br><span class="line">+<span class="comment">----------------------------------------+</span></span><br><span class="line">|                   rax                  |</span><br><span class="line">+<span class="comment">--------------------+-------------------+</span></span><br><span class="line">                     |        eax        |</span><br><span class="line">                     +<span class="comment">---------+---------+</span></span><br><span class="line">                               |   ax    |</span><br><span class="line">                               +<span class="comment">----+----+</span></span><br><span class="line">                               | ah | al |</span><br><span class="line">                               +<span class="comment">----+----+</span></span><br><span class="line">Lower register <span class="keyword">bytes</span> access is applicable <span class="built_in">to</span> all registers_use.</span><br></pre></td></tr></table></figure>
+
+<p><strong>题目</strong></p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Using only the following instruction(s)</span><br><span class="line"><span class="keyword">mov</span></span><br><span class="line">Please compute the following:</span><br><span class="line"><span class="built_in">rax</span> = <span class="built_in">rdi</span> modulo <span class="number">256</span>   //<span class="built_in">rdi</span>低<span class="number">8</span>位</span><br><span class="line"><span class="built_in">rbx</span> = <span class="built_in">rsi</span> modulo <span class="number">65536</span> //<span class="built_in">rsi</span>低<span class="number">16</span>位</span><br><span class="line"></span><br><span class="line">We will now set the following <span class="keyword">in</span> preparation for your code:</span><br><span class="line"><span class="built_in">rdi</span> = <span class="number">0xb6bf</span></span><br><span class="line"><span class="built_in">rsi</span> = <span class="number">0x46492aa</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">	mov al,dil</span><br><span class="line">	mov bx,si</span><br><span class="line">	&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="-1"><a href="#-1" class="headerlink" title=""></a></h4><h4 id="level-7-shr-shl-逻辑位操作"><a href="#level-7-shr-shl-逻辑位操作" class="headerlink" title="level 7 shr shl 逻辑位操作"></a>level 7 shr shl 逻辑位操作</h4><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">In this level you will <span class="keyword">be </span>working with <span class="keyword">bit </span>logic <span class="keyword">and </span>operations. This will involve heavy use of <span class="keyword">directly </span>interacting with <span class="keyword">bits </span>stored in a register <span class="keyword">or </span>memory location. You will also likely need to make use of the logic <span class="keyword">instructions </span>in x86: <span class="keyword">and, </span><span class="keyword">or, </span>not, <span class="keyword">xor.</span></span><br><span class="line"><span class="keyword"></span></span><br><span class="line"><span class="keyword">Shifting </span>in assembly is another interesting concept! x86 allows you to <span class="string">&#x27;shift&#x27;</span></span><br><span class="line"><span class="keyword">bits </span>around in a register. Take for <span class="keyword">instance, </span>rax. For the sake of this example</span><br><span class="line">say rax only can store <span class="number">8</span> <span class="keyword">bits </span>(it <span class="keyword">normally </span>stores <span class="number">64</span>). The value in rax is:</span><br><span class="line">rax = <span class="number">10001010</span></span><br><span class="line">We if we <span class="keyword">shift </span>the value once to the left:</span><br><span class="line"><span class="keyword">shl </span>rax, <span class="number">1</span></span><br><span class="line">The new value is:</span><br><span class="line">rax = <span class="number">00010100</span></span><br><span class="line">As you can see, everything <span class="keyword">shifted </span>to the left <span class="keyword">and </span>the highest <span class="keyword">bit </span>fell off <span class="keyword">and</span></span><br><span class="line"><span class="keyword"></span>a new <span class="number">0</span> was <span class="keyword">added </span>to the right side. You can use this to do special things to</span><br><span class="line">the <span class="keyword">bits </span>you care about. It also has the nice side affect of doing quick <span class="keyword">multiplication,</span></span><br><span class="line"><span class="keyword"></span><span class="keyword">division, </span><span class="keyword">and </span>possibly modulo.</span><br><span class="line">Here are the important <span class="keyword">instructions:</span></span><br><span class="line"><span class="keyword"></span><span class="keyword">shl </span>reg1, reg2       &lt;=&gt;     <span class="keyword">Shift </span>reg1 left <span class="keyword">by </span>the amount in reg2</span><br><span class="line"><span class="keyword">shr </span>reg1, reg2       &lt;=&gt;     <span class="keyword">Shift </span>reg1 right <span class="keyword">by </span>the amount in reg2</span><br><span class="line"><span class="symbol">Note:</span> all <span class="string">&#x27;regX&#x27;</span> can <span class="keyword">be </span>replaced <span class="keyword">by </span>a constant <span class="keyword">or </span>memory location</span><br></pre></td></tr></table></figure>
+
+<p><strong>题目</strong></p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Using only the following instructions:</span><br><span class="line">mov, shr, shl</span><br><span class="line">Please perform the following:</span><br><span class="line"><span class="keyword">Set</span> rax to the <span class="number">5</span>th least significant byte of rdi</span><br><span class="line">i.e.</span><br><span class="line">rdi = | <span class="type">B7</span> | <span class="type">B6</span> | <span class="type">B5</span> | <span class="type">B4</span> | <span class="type">B3</span> | <span class="type">B2</span> | <span class="type">B1</span> | <span class="type">B0</span> |</span><br><span class="line"><span class="type">Set</span> rax to the value of B4</span><br><span class="line"></span><br><span class="line">We will now <span class="built_in">set</span> the following <span class="built_in">in</span> preparation <span class="keyword">for</span> your code:</span><br><span class="line">rdi = <span class="number">0x62592b3164a8dfef</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>题解</strong></p>
+<p>取第四个字节传给rax，那么先左移3个字节，再右移7个字节。就得到第四个字节了。。</p>
+<p>shr，shl 逻辑位运算，补位0。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">	shl rdi,24</span><br><span class="line">	shr rdi,56</span><br><span class="line">	mov al,dil</span><br><span class="line">	&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="level-8-AND-OR-XOR"><a href="#level-8-AND-OR-XOR" class="headerlink" title="level 8 AND OR  XOR"></a>level 8 AND OR  XOR</h4><p>三个按位运算符</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">    AND          OR           XOR</span><br><span class="line"> A | <span class="type">B</span> | <span class="type">X</span>    A | <span class="type">B</span> | <span class="type">X</span>    A | <span class="type">B</span> | <span class="type">X</span></span><br><span class="line">---+---+---  ---+---+---  ---+---+---</span><br><span class="line"> <span class="number">0</span> | <span class="type">0</span> | <span class="type">0</span>    <span class="number">0</span> | <span class="type">0</span> | <span class="type">0</span>    <span class="number">0</span> | <span class="type">0</span> | <span class="type">0</span></span><br><span class="line"> <span class="number">0</span> | <span class="type">1</span> | <span class="type">0</span>    <span class="number">0</span> | <span class="type">1</span> | <span class="type">1</span>    <span class="number">0</span> | <span class="type">1</span> | <span class="type">1</span></span><br><span class="line"> <span class="number">1</span> | <span class="type">0</span> | <span class="type">0</span>    <span class="number">1</span> | <span class="type">0</span> | <span class="type">1</span>    <span class="number">1</span> | <span class="type">0</span> | <span class="type">1</span></span><br><span class="line"> <span class="number">1</span> | <span class="type">1</span> | <span class="type">1</span>    <span class="number">1</span> | <span class="type">1</span> | <span class="type">1</span>    <span class="number">1</span> | <span class="type">1</span> | <span class="type">0</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>题目</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Without using the following instructions:   </span><br><span class="line">mov, xchg         //不能使用这两个指令</span><br><span class="line">Please perform the following:</span><br><span class="line">rax = rdi AND rsi   //完成这个功能</span><br><span class="line">i.e. Set rax to the value of (rdi AND rsi)</span><br></pre></td></tr></table></figure>
+
+<p><strong>题解</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">	xor rax,rax  // 使用xor将rax 变为0</span><br><span class="line">	and rdi,rsi  // 按位与运算，并将结果存在rdi中 </span><br><span class="line">	or rax,rdi   // 因为rax为0，所以这里相当于mov rax，rdi </span><br><span class="line">	&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="level-9-18"><a href="#level-9-18" class="headerlink" title="level 9 - 18"></a>level 9 - 18</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">9</span><br><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">    and rdi,0x1</span><br><span class="line">    xor rax,rax</span><br><span class="line">    xor rax,0x1</span><br><span class="line">    xor rax,rdi</span><br><span class="line">	&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">10</span><br><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">    mov rax,[0x404000]</span><br><span class="line">    mov rbx,rax</span><br><span class="line">    add rbx,0x1337</span><br><span class="line">    mov [0x404000],rbx</span><br><span class="line">	&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">11</span><br><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">    mov al,[0x404000]</span><br><span class="line">    mov bx,[0x404000]</span><br><span class="line">    mov ecx, [0x404000]</span><br><span class="line">    mov rdx, [0x404000]</span><br><span class="line">	&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">12</span><br><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">    mov rax,0xDEADBEEF00001337</span><br><span class="line">    mov [rdi],rax</span><br><span class="line">    mov rbx,0x000000C0FFEE0000</span><br><span class="line">    mov [rsi],rbx</span><br><span class="line">	&quot;&quot;&quot;</span><br><span class="line">	</span><br><span class="line">	下面这样不行</span><br><span class="line">	assembly = f&quot;&quot;&quot;</span><br><span class="line">    mov [rdi],0xDEADBEEF00001337</span><br><span class="line">    mov [rsi],0x000000C0FFEE0000</span><br><span class="line">	&quot;&quot;&quot;</span><br><span class="line">	</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">13</span><br><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">    xor rax,rax</span><br><span class="line">    xor rdx,rdx</span><br><span class="line">    mov rax,[rdi] </span><br><span class="line">    mov rdx,[rdi+8]</span><br><span class="line">    add rax,rdx</span><br><span class="line">    mov [rsi],rax</span><br><span class="line">	&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">14</span><br><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">    sub [rsp],rdi</span><br><span class="line">	&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">15</span><br><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">    push rdi</span><br><span class="line">    push rsi</span><br><span class="line">    pop rdi</span><br><span class="line">    pop rsi</span><br><span class="line">	&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">16</span><br><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">    xor rax,rax</span><br><span class="line">    add rax,[rsp]</span><br><span class="line">    add rax,[rsp+8]</span><br><span class="line">    add rax,[rsp+0x10]</span><br><span class="line">    add rax,[rsp+0x18]</span><br><span class="line">    mov rbx,4</span><br><span class="line">    div rbx</span><br><span class="line">    push rax</span><br><span class="line">	&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">17</span><br><span class="line">nop = &quot;nop\n&quot;*0x51</span><br><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">    jmp next</span><br><span class="line">&#123;nop&#125;</span><br><span class="line">next:</span><br><span class="line">    pop rdi</span><br><span class="line">    mov rax,0x403000</span><br><span class="line">    jmp rax</span><br><span class="line">	&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">18</span><br><span class="line"></span><br><span class="line">shellcode = asm(&#x27;&#x27;&#x27;</span><br><span class="line">mov eax, [rdi + 4]</span><br><span class="line">mov ebx, [rdi + 8]</span><br><span class="line">mov ecx, [rdi + 12]</span><br><span class="line">mov edx, [rdi]</span><br><span class="line">cmp edx, 0x7f454c46</span><br><span class="line">je add</span><br><span class="line">cmp edx, 0x00005A4D</span><br><span class="line">je sub</span><br><span class="line">mul:</span><br><span class="line">imul ebx</span><br><span class="line">imul ecx</span><br><span class="line">jmp end</span><br><span class="line">add:</span><br><span class="line">add eax, ebx</span><br><span class="line">add eax, ecx</span><br><span class="line">jmp end</span><br><span class="line">sub:</span><br><span class="line">sub eax, ebx</span><br><span class="line">sub eax, ecx</span><br><span class="line">end:</span><br><span class="line">&#x27;&#x27;&#x27;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="level-19-跳转表-swtich"><a href="#level-19-跳转表-swtich" class="headerlink" title="level 19 跳转表 swtich"></a>level 19 跳转表 swtich</h4><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if <span class="built_in">rdi</span> is <span class="number">0</span>:</span><br><span class="line">    <span class="keyword">jmp</span> <span class="number">0x40301d</span></span><br><span class="line">else if <span class="built_in">rdi</span> is <span class="number">1</span>:</span><br><span class="line">    <span class="keyword">jmp</span> <span class="number">0x40310c</span></span><br><span class="line">else if <span class="built_in">rdi</span> is <span class="number">2</span>:</span><br><span class="line">    <span class="keyword">jmp</span> <span class="number">0x4031e5</span></span><br><span class="line">else if <span class="built_in">rdi</span> is <span class="number">3</span>:</span><br><span class="line">    <span class="keyword">jmp</span> <span class="number">0x403293</span></span><br><span class="line"><span class="symbol">else:</span></span><br><span class="line">    <span class="keyword">jmp</span> <span class="number">0x403346</span></span><br></pre></td></tr></table></figure>
+
+<p>实现如上逻辑 rsi 为跳转表地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">cmp rdi, 3</span><br><span class="line">jg else</span><br><span class="line">    jmp [rsi + rdi * 8]</span><br><span class="line">else:</span><br><span class="line">    jmp [rsi + 0x20]</span><br><span class="line">	&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="level-20-21-循环"><a href="#level-20-21-循环" class="headerlink" title="level 20-21 循环"></a>level 20-21 循环</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">loop:</span><br><span class="line">    cmp rbx, rsi</span><br><span class="line">    jge end</span><br><span class="line">    add rax, [rdi + rbx * 8]</span><br><span class="line">    add rbx, 1</span><br><span class="line">    jmp loop</span><br><span class="line">end:</span><br><span class="line">    div rsi</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">mov rax,0</span><br><span class="line">cmp rdi,0</span><br><span class="line">je end</span><br><span class="line">loop:</span><br><span class="line">    mov rbx,[rdi+rax] </span><br><span class="line">    cmp rbx,0</span><br><span class="line">    je end</span><br><span class="line">    inc rax</span><br><span class="line">    jmp loop</span><br><span class="line">end:</span><br><span class="line">	&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="level-22-函数创建与函数调用"><a href="#level-22-函数创建与函数调用" class="headerlink" title="level 22 函数创建与函数调用"></a>level 22 函数创建与函数调用</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">assembly = f&quot;&quot;&quot;</span><br><span class="line">mov rax,0</span><br><span class="line">cmp rdi,0</span><br><span class="line">je end</span><br><span class="line">loop:</span><br><span class="line">    cmp byte ptr [rdi],0    //rdi为传入的参数</span><br><span class="line">    je end</span><br><span class="line">    cmp byte ptr [rdi],90</span><br><span class="line">    ja next</span><br><span class="line">    push rax</span><br><span class="line">    push rdi	</span><br><span class="line">    mov dil, byte ptr [rdi]		//dil 是rdi最低子节</span><br><span class="line">    mov rax,0x403000        //函数地址</span><br><span class="line">    call rax</span><br><span class="line">    pop rdi</span><br><span class="line">    mov [rdi],al</span><br><span class="line">    pop rax</span><br><span class="line">    inc rax</span><br><span class="line">next:</span><br><span class="line">    inc rdi</span><br><span class="line">    jmp loop</span><br><span class="line">end:</span><br><span class="line">    ret</span><br><span class="line">	&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="level-23-栈帧"><a href="#level-23-栈帧" class="headerlink" title="level 23 栈帧"></a>level 23 栈帧</h4><p>题目</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">please make <span class="function"><span class="keyword">function</span>(<span class="title">s</span>) <span class="title">that</span> <span class="title">implements</span> <span class="title">the</span> <span class="title">following</span>:</span></span><br><span class="line"></span><br><span class="line">most_common_byte(src_addr, size):</span><br><span class="line">    b = <span class="number">0</span></span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i &lt;= size<span class="number">-1</span>:</span><br><span class="line">        curr_byte = [src_addr + i]</span><br><span class="line">        [stack_base - curr_byte] += <span class="number">1</span></span><br><span class="line">    b = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    max_freq = <span class="number">0</span></span><br><span class="line">    max_freq_byte = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="literal">return</span> max_freq_byte</span><br><span class="line">    </span><br><span class="line">Assumptions:</span><br><span class="line">- There will never be more than <span class="number">0xffff</span> <span class="keyword">of</span> <span class="keyword">any</span> <span class="keyword">byte</span></span><br><span class="line">- The size will never be longer than <span class="number">0xffff</span></span><br><span class="line">- The list will have <span class="keyword">at</span> least <span class="literal">one</span> <span class="keyword">element</span></span><br><span class="line">Constraints:</span><br><span class="line">- You must <span class="built_in">put</span> <span class="keyword">the</span> <span class="string">&quot;counting list&quot;</span> <span class="keyword">on</span> <span class="title">the</span> <span class="title">stack</span></span><br><span class="line">- You must restore <span class="keyword">the</span> stack like <span class="keyword">in</span> <span class="keyword">a</span> <span class="keyword">normal</span> <span class="function"><span class="keyword">function</span></span></span><br><span class="line">- You cannot modify <span class="keyword">the</span> data <span class="keyword">at</span> src_addr</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/PwnCollege/" rel="tag"># PwnCollege</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/10/13/Program%20Interaction/" rel="prev" title="Program Interaction">
+      <i class="fa fa-chevron-left"></i> Program Interaction
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#level-1-%E5%AF%84%E5%AD%98%E5%99%A8%E8%B5%8B%E5%80%BC"><span class="nav-text">level 1  寄存器赋值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-text"></span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-2-add"><span class="nav-text">level 2 add</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-3-imul"><span class="nav-text">level 3 imul</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-4-div"><span class="nav-text">level 4 div</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-5-%E4%BD%99%E6%95%B0"><span class="nav-text">level 5  余数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-6-%E5%AF%84%E5%AD%98%E5%99%A8%E7%BB%93%E6%9E%84"><span class="nav-text">level 6  寄存器结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#-1"><span class="nav-text"></span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-7-shr-shl-%E9%80%BB%E8%BE%91%E4%BD%8D%E6%93%8D%E4%BD%9C"><span class="nav-text">level 7 shr shl 逻辑位操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-8-AND-OR-XOR"><span class="nav-text">level 8 AND OR  XOR</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-9-18"><span class="nav-text">level 9 - 18</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-19-%E8%B7%B3%E8%BD%AC%E8%A1%A8-swtich"><span class="nav-text">level 19 跳转表 swtich</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-20-21-%E5%BE%AA%E7%8E%AF"><span class="nav-text">level 20-21 循环</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-22-%E5%87%BD%E6%95%B0%E5%88%9B%E5%BB%BA%E4%B8%8E%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8"><span class="nav-text">level 22 函数创建与函数调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#level-23-%E6%A0%88%E5%B8%A7"><span class="nav-text">level 23 栈帧</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="dreamfoil"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">dreamfoil</p>
+  <div class="site-description" itemprop="description">独立之精神，自由之思想。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:1224825643@qq.com" title="E-Mail → mailto:1224825643@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">dreamfoil</span>
+</div>
+
+ <!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div> -->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
